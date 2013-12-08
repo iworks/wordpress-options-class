@@ -6,6 +6,11 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 1.7.5 (2013-12-08)
+
+* BUGFIX: repair some php warnigs
+
+
 ##### 1.7.4 (2013-08-27)
 
 * IMPROVMENT: added filter to change options

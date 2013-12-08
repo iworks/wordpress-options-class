@@ -300,42 +300,46 @@ class IworksOptions
                 if ( isset( $option['extra_options'] ) && is_callable( $option['extra_options'] ) ) {
                     $option['radio'] = array_merge( $option['radio'], $option['extra_options']());
                 }
-                $option['radio'] = apply_filters( $filter_name.'_data', $option['radio'] );
-                $radio = apply_filters( $filter_name.'_content', null, $option['radio'], $html_element_name, $option['name'], $option_value );
-                if ( empty( $radio ) ) {
-                    foreach ($option['radio'] as $value => $input) {
-                        $id = $option['name'].$i++;
-                        $disabled = '';
-                        if ( preg_match( '/\-disabled$/', $value ) ) {
-                            $disabled = 'disabled="disabled"';
-                        } elseif ( isset( $input['disabled'] ) && $input['disabled'] ) {
-                            $disabled = 'disabled="disabled"';
-                        }
-                        $radio .= sprintf(
-                            '<li class="%s%s"><label for="%s"><input type="radio" name="%s" value="%s"%s id="%s" %s/> %s</label>',
-                            sanitize_title( $value ),
-                            $disabled? ' disabled':'',
-                            $id,
-                            $html_element_name,
-                            $value,
-                            ($option_value == $value or ( empty($option_value) and isset($option['default']) and $value == $option['default'] ) )? ' checked="checked"':'',
-                            $id,
-                            $disabled,
-                            $input['label']
-                        );
-                        if ( isset( $input['description'] ) ) {
+                if ( array_key_exists( 'radio', $option ) ) {
+                    $option['radio'] = apply_filters( $filter_name.'_data', $option['radio'] );
+                    $radio = apply_filters( $filter_name.'_content', null, $option['radio'], $html_element_name, $option['name'], $option_value );
+                    if ( empty( $radio ) ) {
+                        foreach ($option['radio'] as $value => $input) {
+                            $id = $option['name'].$i++;
+                            $disabled = '';
+                            if ( preg_match( '/\-disabled$/', $value ) ) {
+                                $disabled = 'disabled="disabled"';
+                            } elseif ( isset( $input['disabled'] ) && $input['disabled'] ) {
+                                $disabled = 'disabled="disabled"';
+                            }
                             $radio .= sprintf(
-                                '<br /><span class="description">%s</span>',
-                                $input['description']
+                                '<li class="%s%s"><label for="%s"><input type="radio" name="%s" value="%s"%s id="%s" %s/> %s</label>',
+                                sanitize_title( $value ),
+                                $disabled? ' disabled':'',
+                                $id,
+                                $html_element_name,
+                                $value,
+                                ($option_value == $value or ( empty($option_value) and isset($option['default']) and $value == $option['default'] ) )? ' checked="checked"':'',
+                                $id,
+                                $disabled,
+                                $input['label']
                             );
+                            if ( isset( $input['description'] ) ) {
+                                $radio .= sprintf(
+                                    '<br /><span class="description">%s</span>',
+                                    $input['description']
+                                );
+                            }
+                            $radio .= '</li>';
                         }
-                        $radio .= '</li>';
+                        if ( $radio ) {
+                            $radio = '<ul>'.$radio.'</ul>';
+                        }
                     }
-                    if ( $radio ) {
-                        $radio = '<ul>'.$radio.'</ul>';
-                    }
+                    $content .= apply_filters( $filter_name, $radio );
+                } else {
+                    $content .= sprintf( '<p>Error: no <strong>radio</strong> array key for option: <em>%s</em>.</p>', $option['name'] );
                 }
-                $content .= apply_filters( $filter_name, $radio );
                 break;
             case 'select':
                 $option_value = $this->get_option( $option['name'], $option_group );
@@ -554,7 +558,7 @@ class IworksOptions
         /**
          * check options exists?
          */
-        if ( !is_array( $options['options'] ) ) {
+        if ( !array_key_exists( 'options', $options ) or !is_array( $options['options'] ) ) {
             return null;
         }
         foreach ( $options['options'] as $option ) {
