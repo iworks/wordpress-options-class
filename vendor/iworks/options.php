@@ -601,6 +601,8 @@ class IworksOptions
             }
         }
         delete_option( $this->option_prefix.'cache_stamp' );
+        delete_option( $this->option_prefix.'version' );
+        delete_option( $this->option_prefix.'flush_rules' );
     }
 
     public function settings_fields($option_name)
