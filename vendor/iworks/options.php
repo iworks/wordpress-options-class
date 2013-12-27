@@ -638,11 +638,8 @@ class IworksOptions
     {
         $option_value = get_option( $this->option_prefix.$option_name, null );
         $default_value = $this->get_default_value( $option_name, $option_group );
-        if ( $forece_default && null == $option_value ) {
+        if ( ( $default_value || $forece_default ) && is_null( $option_value ) ) {
             $option_value = $default_value;
-        }
-        if ( null == $option_value && !empty( $default_value ) ) {
-            return $default_value;
         }
         return $option_value;
     }

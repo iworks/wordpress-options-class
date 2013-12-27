@@ -6,6 +6,10 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 1.7.7 (2013-12-27)
+
+* BUGFIX: default value only when is need
+
 ##### 1.7.6 (2013-12-18)
 
 * IMPROVMENT: added remove two options to "decativate plugin" function
