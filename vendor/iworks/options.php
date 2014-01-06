@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage opsions.
-Version: trunk
+Version: master
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -45,7 +45,7 @@ class IworksOptions
     public function __construct()
     {
         $this->notices              = array();
-        $this->version              = 'trunk';
+        $this->version              = 'master';
         $this->option_group         = 'index';
         $this->option_function_name = null;
         $this->option_prefix        = null;
@@ -70,16 +70,19 @@ class IworksOptions
 
     private function get_option_array()
     {
-        if ( isset( $this->options[ $this->option_group ] ) ) {
+        $options = array();
+        if ( array_key_exists( $this->option_group, $options ) && !empty( $options[ $this->option_group ] ) ) {
             $options = apply_filters( $this->option_function_name, $this->options );
             return $options[ $this->option_group ];
         }
-        $options = apply_filters( $this->option_function_name, call_user_func( $this->option_function_name ) );
-        if ( isset( $options[ $this->option_group ] ) ) {
-            $this->options[ $this->option_group ] = $options[ $this->option_group ];
-            return $this->options[ $this->option_group ];
+        if ( is_callable( $this->option_function_name ) ) {
+            $options = apply_filters( $this->option_function_name, call_user_func( $this->option_function_name ) );
         }
-        return array();
+        if ( array_key_exists( $this->option_group, $options ) && !empty( $options[ $this->option_group ] ) ) {
+            $this->options[ $this->option_group ] = $options[ $this->option_group ];
+            return apply_filters( $this->option_function_name, $this->options[ $this->option_group ] );
+        }
+        return apply_filters( $this->option_function_name, array() );
     }
 
     public function build_options($option_group = 'index', $echo = true)
@@ -201,7 +204,7 @@ class IworksOptions
                 if ( isset($option['related_to'] ) && isset( $related_to[ $option['related_to'] ] ) && $related_to[ $option['related_to'] ] == 0 ) {
                     $style .= 'style="display:none"';
                 }
-                $content .= sprintf( '<tr valign="top" class="%s" id="tr_%s"%s>', $i++%2? 'alternate':'', isset($option['name'])? $option['name']:'', $style );
+                $content .= sprintf( '<tr valign="top" id="tr_%s"%s>', isset($option['name'])? $option['name']:'', $style );
                 $content .= sprintf( '<th scope="row">%s</th>', isset($option['th']) && $option['th']? $option['th']:'&nbsp;' );
                 $content .= '<td>';
             }
@@ -512,22 +515,32 @@ class IworksOptions
         return $content;
     }
 
+    private function register_setting($options, $option_group)
+    {
+        foreach ( $options as $option ) {
+            if ( $option['type'] == 'heading' || !isset($option['name']) ) {
+                continue;
+            }
+            register_setting (
+                $this->option_prefix.$option_group,
+                $this->option_prefix.$option['name'],
+                isset($option['sanitize_callback'])? $option['sanitize_callback']:null
+            );
+        }
+    }
+
     public function options_init()
     {
-        $options = apply_filters( $this->option_function_name, call_user_func( $this->option_function_name ) );
+        $options = array();
+        if ( is_callable( $this->option_function_name ) ) {
+            $options = call_user_func( $this->option_function_name );
+        }
+        $options = apply_filters( $this->option_function_name, $options );
         foreach( $options as $key => $data ) {
             if ( isset ( $data['options'] ) && is_array( $data['options'] ) ) {
-                $option_group = $this->option_prefix.$key;
-                foreach ( $data['options'] as $option ) {
-                    if ( $option['type'] == 'heading' || !isset($option['name']) ) {
-                        continue;
-                    }
-                    register_setting (
-                        $option_group,
-                        $this->option_prefix.$option['name'],
-                        isset($option['sanitize_callback'])? $option['sanitize_callback']:null
-                    );
-                }
+                $this->register_setting( $data['options'], $key );
+            } elseif ( 'options' == $key ) {
+                $this->register_setting( $data, 'theme' );
             }
         }
     }
@@ -605,9 +618,13 @@ class IworksOptions
         delete_option( $this->option_prefix.'flush_rules' );
     }
 
-    public function settings_fields($option_name)
+    public function settings_fields($option_name, $use_prefix = true)
     {
-        settings_fields( $this->option_prefix . $option_name );
+        if ( $use_prefix ) {
+            settings_fields( $this->option_prefix . $option_name );
+        } else {
+            settings_fields( $option_name );
+        }
     }
 
     /**

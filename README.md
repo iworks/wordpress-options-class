@@ -6,6 +6,12 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.0.0  (2014-01-06)
+
+* IMPROVMENT: init can read both setting: plugin & themes
+* IMPROVMENT: add option array filter
+* IMPROVMENT: add method to register settings without prefix
+
 ##### 1.7.7 (2013-12-27)
 
 * BUGFIX: default value only when is need
