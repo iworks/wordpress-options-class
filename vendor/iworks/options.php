@@ -218,7 +218,7 @@ class IworksOptions
                 $hidden .= sprintf (
                     '<input type="hidden" name="%s" value="%s" />',
                     $html_element_name,
-                    isset($option['dynamic']) && $option['dynamic']? $this->get_option( $option['name'], $option_group ):$option['default']
+                    $this->get_option( $option['name'], $option_group )
                 );
                 break;
             case 'number':
