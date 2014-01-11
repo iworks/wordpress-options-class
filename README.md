@@ -1,4 +1,4 @@
-wordpress-options-class
+WordPress Options Class
 =======================
 
 Options Class for WordPress plugins &amp; themes
