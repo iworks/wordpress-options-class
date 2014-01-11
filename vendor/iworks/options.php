@@ -105,7 +105,10 @@ class IworksOptions
          * produce options
          */
         if ( $use_tabs ) {
-            $top .= '<div id="hasadmintabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">';
+            $top .= sprintf(
+                '<div id="hasadmintabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all" data-prefix="%s">',
+                $this->option_prefix
+            );
         }
         $i           = 0;
         $label_index = 0;
@@ -197,9 +200,9 @@ class IworksOptions
                     $content .= '<tbody>';
                 }
                 $content .= '<tr><td colspan="2">';
-            } elseif ( $option['type'] == 'subheading' ) {
+            } elseif ( 'subheading' == $option['type'] ) {
                 $content .= '<tr><td colspan="2">';
-            } elseif ( $option['type'] != 'hidden' ) {
+            } elseif ( 'hidden' != $option['type'] ) {
                 $style = '';
                 if ( isset($option['related_to'] ) && isset( $related_to[ $option['related_to'] ] ) && $related_to[ $option['related_to'] ] == 0 ) {
                     $style .= 'style="display:none"';
@@ -212,12 +215,11 @@ class IworksOptions
             $filter_name = $html_element_name? $option_group.'_'.$html_element_name : null;
             switch ( $option['type'] ) {
             case 'hidden':
-                $hidden .= sprintf
-                    (
-                        '<input type="hidden" name="%s" value="%s" />',
-                        $html_element_name,
-                        isset($option['dynamic']) && $option['dynamic']? $this->get_option( $option['name'], $option_group ):$option['default']
-                    );
+                $hidden .= sprintf (
+                    '<input type="hidden" name="%s" value="%s" />',
+                    $html_element_name,
+                    isset($option['dynamic']) && $option['dynamic']? $this->get_option( $option['name'], $option_group ):$option['default']
+                );
                 break;
             case 'number':
                 $id = '';
@@ -336,7 +338,7 @@ class IworksOptions
                             $radio .= '</li>';
                         }
                         if ( $radio ) {
-                            $radio = '<ul>'.$radio.'</ul>';
+                            $radio = sprintf('<ul>%s</ul>', $radio);
                         }
                     }
                     $content .= apply_filters( $filter_name, $radio );
@@ -518,9 +520,21 @@ class IworksOptions
     private function register_setting($options, $option_group)
     {
         foreach ( $options as $option ) {
-            if ( $option['type'] == 'heading' || !isset($option['name']) ) {
+            /**
+             * don't register setting without type and name
+             */
+            if ( !array_key_exists( 'type', $option ) || !array_key_exists('name', $option ) ) {
                 continue;
             }
+            /**
+             * don't register certain type setting or with empty name
+             */
+            if ( preg_match( '/^(sub)?heading$/', $option['type'] ) || empty($option['name']) ) {
+                continue;
+            }
+            /**
+             * register setting
+             */
             register_setting (
                 $this->option_prefix.$option_group,
                 $this->option_prefix.$option['name'],
