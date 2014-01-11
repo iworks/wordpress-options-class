@@ -6,11 +6,11 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
-##### 2.1.0  (future realase)
+##### 2.1.0 (2014-01-11)
 
 * BUGFIX: fix remebering last used tab for theme usage
 
-##### 2.0.0  (2014-01-06)
+##### 2.0.0 (2014-01-06)
 
 * IMPROVMENT: init can read both setting: plugin & themes
 * IMPROVMENT: add option array filter
