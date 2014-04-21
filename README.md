@@ -6,6 +6,12 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 3.0.0 (future)
+
+* IMPROVMENT: added meta boxes
+* IMPROVMENT: added script enqueue
+* IMPROVMENT: integrate tabs display (no more external js in theme or plugin)
+
 ##### 2.1.0 (2014-01-11)
 
 * BUGFIX: fix remebering last used tab for theme usage
