@@ -8,8 +8,11 @@ Changelog
 
 ##### 3.0.0 (future)
 
+* IMPROVMENT: added ability to create option page in any point of menu
 * IMPROVMENT: added meta boxes
+* IMPROVMENT: added page load hook
 * IMPROVMENT: added script enqueue
+* IMPROVMENT: added build-in option page
 * IMPROVMENT: integrate tabs display (no more external js in theme or plugin)
 
 ##### 2.1.0 (2014-01-11)
