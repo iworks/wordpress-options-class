@@ -560,6 +560,34 @@ class iworks_options
                         ' <input type="submit" class="button iworks_delete_button" value="%s" rel="#%s%s" />',
                         __( 'Delete image', 'iworks_options' ),
                         $html_element_name
+/*
+                $value = $this->get_option($option['name'], $option_group);
+                $content .= sprintf(
+                    '<img id="%s%s_img" src="%s" alt="" style="max-width: %dpx; max-height: %dpx; clear: right;display: block;margin-bottom: 10px;" />',
+                    $html_element_name,
+                    $value? $value : '',
+                    $args['max-width'],
+                    $args['max-height']
+                );
+                $content .= sprintf(
+                    '<input type="hidden" name="%s" id="%s" value="%s" />',
+                        $this->get_option( $option['name'], $option_group ),
+                        $this->get_option( $option['name'], $option_group ),
+                    $value
+                );
+                $content .= sprintf(
+                    ' <input type="button" class="button iworks_upload_button" value="%s" rel="#%s%s" />',
+                    __( 'Upload image', IWORKS_THEME_NAME ),
+                    $this->theme_options_prefix,
+                    $args['field_id']
+                );
+                if (  $value != $this->get_default_value( $args['field_id'] ) ) {
+                    $content .= sprintf(
+                        ' <input type="submit" class="button iworks_delete_button" value="%s" rel="#%s%s" />',
+                        __( 'Delete image', IWORKS_THEME_NAME ),
+                        $this->theme_options_prefix,
+                        $args['field_id']
+*/
                     );
                 }
                 break;
