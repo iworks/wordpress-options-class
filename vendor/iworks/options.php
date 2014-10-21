@@ -58,6 +58,9 @@ class iworks_options
 
     public function admin_menu()
     {
+        if ( !isset($this->options ) ) {
+            return;
+        }
         foreach( $this->options as $key => $data ) {
             if ( !array_key_exists( 'menu', $data ) ) {
                 $data['menu'] = '';
@@ -177,6 +180,12 @@ class iworks_options
                 }
             }
             /**
+                * add default type
+                */
+            if ( !array_key_exists('type', $option ) ) {
+                $option['type'] = 'text';
+            }
+            /**
              * check show option
              */
             $show_option = true;
@@ -222,7 +231,7 @@ class iworks_options
             /**
              * heading
              */
-            if ( 'heading' == $option['type'] ) {
+            if ( preg_match( '/^(heading|page)$/', $option['type'] ) ) {
                 if ( isset( $option['configuration'] ) ) {
                     $configuration = $option['configuration'];
                 } else {
@@ -235,6 +244,7 @@ class iworks_options
                 }
                 if( in_array( $option['type'], array(
                     'checkbox',
+                    'email',
                     'image',
                     'number',
                     'radio',
@@ -316,6 +326,7 @@ class iworks_options
                     isset($option['label'])?  $option['label']:''
                 );
                 break;
+            case 'email':
             case 'password':
             case 'text':
                 $id = '';
@@ -380,14 +391,28 @@ class iworks_options
             case 'radio':
                 $option_value = $this->get_option( $option_name, $option_group );
                 $i = 0;
-                if ( isset( $option['extra_options'] ) && is_callable( $option['extra_options'] ) ) {
-                    $option['radio'] = array_merge( $option['radio'], $option['extra_options']());
+                /**
+                 * check user add "radio" or "options".
+                 */
+                $radio_options = array();
+                if ( array_key_exists('options', $option) ) {
+                    $radio_options = $option['options'];
+                } else if ( array_key_exists('radio', $option) ) {
+                    $radio_options = $option['radio'];
                 }
-                if ( array_key_exists( 'radio', $option ) ) {
-                    $option['radio'] = apply_filters( $filter_name.'_data', $option['radio'] );
-                    $radio = apply_filters( $filter_name.'_content', null, $option['radio'], $html_element_name, $option_name, $option_value );
+                if ( empty($radio_options) ) {
+                    $content .= sprintf(
+                        '<p>Error: no <strong>radio</strong> array key for option: <em>%s</em>.</p>',
+                        $option_name
+                    );
+                } else {
+                    /**
+                     * add extra options, maybe dynamic?
+                     */
+                    $radio_options = apply_filters( $filter_name.'_data', $radio_options );
+                    $radio = apply_filters( $filter_name.'_content', null, $radio_options, $html_element_name, $option_name, $option_value );
                     if ( empty( $radio ) ) {
-                        foreach ($option['radio'] as $value => $input) {
+                        foreach ($radio_options as $value => $input) {
                             $id = sprintf( '%s%d', $option_name, $i++ );
                             $disabled = '';
                             if ( preg_match( '/\-disabled$/', $value ) ) {
@@ -420,11 +445,6 @@ class iworks_options
                         }
                     }
                     $content .= apply_filters( $filter_name, $radio );
-                } else {
-                    $content .= sprintf(
-                        '<p>Error: no <strong>radio</strong> array key for option: <em>%s</em>.</p>',
-                        $option_name
-                    );
                 }
                 break;
             case 'select':
@@ -560,34 +580,6 @@ class iworks_options
                         ' <input type="submit" class="button iworks_delete_button" value="%s" rel="#%s%s" />',
                         __( 'Delete image', 'iworks_options' ),
                         $html_element_name
-/*
-                $value = $this->get_option($option['name'], $option_group);
-                $content .= sprintf(
-                    '<img id="%s%s_img" src="%s" alt="" style="max-width: %dpx; max-height: %dpx; clear: right;display: block;margin-bottom: 10px;" />',
-                    $html_element_name,
-                    $value? $value : '',
-                    $args['max-width'],
-                    $args['max-height']
-                );
-                $content .= sprintf(
-                    '<input type="hidden" name="%s" id="%s" value="%s" />',
-                        $this->get_option( $option['name'], $option_group ),
-                        $this->get_option( $option['name'], $option_group ),
-                    $value
-                );
-                $content .= sprintf(
-                    ' <input type="button" class="button iworks_upload_button" value="%s" rel="#%s%s" />',
-                    __( 'Upload image', IWORKS_THEME_NAME ),
-                    $this->theme_options_prefix,
-                    $args['field_id']
-                );
-                if (  $value != $this->get_default_value( $args['field_id'] ) ) {
-                    $content .= sprintf(
-                        ' <input type="submit" class="button iworks_delete_button" value="%s" rel="#%s%s" />',
-                        __( 'Delete image', IWORKS_THEME_NAME ),
-                        $this->theme_options_prefix,
-                        $args['field_id']
-*/
                     );
                 }
                 break;
@@ -951,7 +943,7 @@ class iworks_options
         <?php wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false ); ?>
         <?php wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false ); ?>
         <input type="hidden" name="action" value="save_howto_metaboxes_general" />
-        <div id="poststuff" class="metabox-holder<?php echo 2 == $screen_layout_columns ? ' has-right-sidebar' : ''; ?>">
+        <div id="poststuff" class="metabox-holder<?php echo empty($screen_layout_columns) || 2 == $screen_layout_columns ? ' has-right-sidebar' : ''; ?>">
             <div id="side-info-column" class="inner-sidebar">
                 <?php do_meta_boxes($this->pagehooks[$option_name], 'side', $this); ?>
             </div>
