@@ -6,7 +6,7 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
-##### 3.0.0 (future)
+##### 2.4.0 (2015-11-11)
 
 * IMPROVMENT: added ability to create option page in any point of menu
 * IMPROVMENT: added meta boxes
