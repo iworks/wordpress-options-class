@@ -46,7 +46,7 @@ class iworks_options
     public function __construct()
     {
         $this->notices              = array();
-        $this->version              = '2.2.0';
+        $this->version              = '2.4.0';
         $this->option_group         = 'index';
         $this->option_function_name = null;
         $this->option_prefix        = null;
