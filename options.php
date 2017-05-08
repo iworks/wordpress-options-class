@@ -158,7 +158,7 @@ class iworks_options
          * check options exists?
          */
         if ( !is_array($options['options'] ) ) {
-            echo '<div class="below-h2 error"><p><strong>'.__('An error occurred while getting the configuration.', 'iworks_options_text_domain').'</strong></p></div>';
+            echo '<div class="below-h2 error"><p><strong>'.__('An error occurred while getting the configuration.', IWORKS_OPTIONS_TEXTDOMAIN).'</strong></p></div>';
             return;
         }
 
@@ -603,13 +603,13 @@ class iworks_options
                 );
                 $content .= sprintf(
                     ' <input type="button" class="button iworks_upload_button" value="%s" rel="#%s" />',
-                    __( 'Upload image', 'iworks_options_text_domain' ),
+                    __( 'Upload image', IWORKS_OPTIONS_TEXTDOMAIN ),
                     $html_element_name
                 );
                 if ( !empty($value) || ( array_key_exists('default', $option) && $value != $option['default'] ) ) {
                     $content .= sprintf(
                         ' <input type="submit" class="button iworks_delete_button" value="%s" rel="#%s%s" />',
-                        __( 'Delete image', 'iworks_options_text_domain' ),
+                        __( 'Delete image', IWORKS_OPTIONS_TEXTDOMAIN ),
                         $html_element_name
                     );
                 }
