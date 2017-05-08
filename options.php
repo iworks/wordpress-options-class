@@ -470,15 +470,22 @@ class iworks_options
                         }
                     }
                     $content .= apply_filters( $filter_name, $radio );
-                } else {
-                    $content .= sprintf(
-                        '<p>Error: no <strong>radio</strong> array key for option: <em>%s</em>.</p>',
-                        $option_name
-                    );
                 }
                 break;
             case 'select':
+            case 'select2':
+                $classes = array();
+                $extra = $name_sufix = '';
+                if ( 'select2' == $option['type'] ) {
+                    $classes[] = 'select2';
+                    if ( isset( $option['multiple'] ) && $option['multiple'] ) {
+                        $extra = ' multiple="multiple"';
+                        $name_sufix = '[]';
+                    }
+                }
                 $option_value = $this->get_option( $option_name, $option_group );
+
+l($option_value);
 
                 if ( isset( $option['extra_options'] ) && is_callable( $option['extra_options'] ) ) {
                     $option['options'] = array_merge( $option['options'], $option['extra_options']());
@@ -495,24 +502,43 @@ class iworks_options
                         } elseif ( isset( $input['disabled'] ) && $input['disabled'] ) {
                             $disabled = 'disabled="disabled"';
                         }
-                        $select .= sprintf
-                            (
-                                '<option %s value="%s" %s %s >%s</option>',
-                                $disabled? 'class="disabled"':'',
-                                $key,
-                                ($option_value == $key or ( empty( $option_value ) and isset( $option['default'] ) and $key == $option['default'] ) )? ' selected="selected"':'',
-                                $disabled,
-                                $value
-                            );
+
+
+
+
+                        $selected = false;
+                        if ( is_array( $option_value ) ) {
+                            if ( empty( $option_value ) ) {
+                            } else {
+                                $selected = in_array( $key, $option_value );
+                            }
+                        } else {
+                            $selected  = ($option_value == $key or ( empty( $option_value ) and isset( $option['default'] ) and $key == $option['default'] ) );
+                        }
+
+
+                        l(array( $key, $selected ) );
+
+
+                        $select .= sprintf (
+                            '<option %s value="%s" %s %s >%s</option>',
+                            $disabled? 'class="disabled"':'',
+                            $key,
+                            selected( $selected, true, false ),
+                            $disabled,
+                            $value
+                        );
                     }
                     if ( $select ) {
-                        $select = sprintf
-                            (
-                                '<select id="%s" name="%s">%s</select>',
-                                $html_element_name,
-                                $html_element_name,
-                                $select
-                            );
+                        $select = sprintf (
+                            '<select id="%s" name="%s%s" class="%s" %s>%s</select>',
+                            esc_attr( $html_element_name ),
+                            esc_attr( $html_element_name ),
+                            $name_sufix,
+                            esc_attr( implode( ' ', $classes ) ),
+                            $extra,
+                            $select
+                        );
                     }
                 }
                 $content .= apply_filters( $filter_name, $select );
@@ -680,6 +706,12 @@ class iworks_options
         if ( $options['show_submit_button'] ) {
             $content .= get_submit_button( __( 'Save Changes' ), 'primary', 'submit_button' );
         }
+
+        /**
+         * iworks-options wrapper
+         */
+        $content = sprintf( '<div class="iworks-options">%s</div>', $content );
+
         /* print ? */
         if ( $echo ) {
             echo $content;
@@ -709,7 +741,7 @@ class iworks_options
             register_setting (
                 $this->option_prefix.$option_group,
                 $this->option_prefix.$option['name'],
-                isset($option['sanitize_callback'])? $option['sanitize_callback']:null
+                isset($option['sanitize_callback'])? $option['sanitize_callback']:array( $this, 'sanitize_callback' )
             );
         }
     }
@@ -986,7 +1018,7 @@ class iworks_options
         $data = array();
 ?>
 <div class="wrap">
-    <h2><?php echo $options['page_title']; ?></h2>
+    <h1><?php echo $options['page_title']; ?></h1>
     <form method="post" action="options.php" id="iworks_upprev_admin_index">
         <?php wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false ); ?>
         <?php wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false ); ?>
@@ -1157,4 +1189,13 @@ function iworks_options_tabulator_init()
         }
         return $opts;
     }
+
+
+    public function sanitize_callback( $value ) {
+        l($value);
+
+
+        return $value;
+    }
+
 }
