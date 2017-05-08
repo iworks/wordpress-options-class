@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.4.0
+Version: 2.4.1
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -46,7 +46,7 @@ class iworks_options
     public function __construct()
     {
         $this->notices              = array();
-        $this->version              = '2.4.0';
+        $this->version              = '2.4.1';
         $this->option_group         = 'index';
         $this->option_function_name = null;
         $this->option_prefix        = null;
@@ -158,7 +158,7 @@ class iworks_options
          * check options exists?
          */
         if ( !is_array($options['options'] ) ) {
-            echo '<div class="below-h2 error"><p><strong>'.__('An error occurred while getting the configuration.', 'iworks_options').'</strong></p></div>';
+            echo '<div class="below-h2 error"><p><strong>'.__('An error occurred while getting the configuration.', 'iworks_options_text_domain').'</strong></p></div>';
             return;
         }
 
@@ -460,6 +460,14 @@ class iworks_options
                         if ( $radio ) {
                             $radio = sprintf('<ul>%s</ul>', $radio);
                         }
+                    } else {
+                        $radio = apply_filters( $filter_name, $radio );
+                        if ( empty( $radio ) ) {
+                            $content .= sprintf(
+                                '<p>Error: no <strong>radio</strong> array key for option: <em>%s</em>.</p>',
+                                $option_name
+                            );
+                        }
                     }
                     $content .= apply_filters( $filter_name, $radio );
                 } else {
@@ -595,13 +603,13 @@ class iworks_options
                 );
                 $content .= sprintf(
                     ' <input type="button" class="button iworks_upload_button" value="%s" rel="#%s" />',
-                    __( 'Upload image', 'iworks_options' ),
+                    __( 'Upload image', 'iworks_options_text_domain' ),
                     $html_element_name
                 );
                 if ( !empty($value) || ( array_key_exists('default', $option) && $value != $option['default'] ) ) {
                     $content .= sprintf(
                         ' <input type="submit" class="button iworks_delete_button" value="%s" rel="#%s%s" />',
-                        __( 'Delete image', 'iworks_options' ),
+                        __( 'Delete image', 'iworks_options_text_domain' ),
                         $html_element_name
                     );
                 }
