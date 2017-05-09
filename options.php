@@ -485,8 +485,6 @@ class iworks_options
                 }
                 $option_value = $this->get_option( $option_name, $option_group );
 
-l($option_value);
-
                 if ( isset( $option['extra_options'] ) && is_callable( $option['extra_options'] ) ) {
                     $option['options'] = array_merge( $option['options'], $option['extra_options']());
                 }
@@ -515,10 +513,6 @@ l($option_value);
                         } else {
                             $selected  = ($option_value == $key or ( empty( $option_value ) and isset( $option['default'] ) and $key == $option['default'] ) );
                         }
-
-
-                        l(array( $key, $selected ) );
-
 
                         $select .= sprintf (
                             '<option %s value="%s" %s %s >%s</option>',
