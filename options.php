@@ -51,8 +51,9 @@ class iworks_options
         $this->option_function_name = null;
         $this->option_prefix        = null;
 
-        add_action( 'admin_notices', array( &$this, 'admin_notices' ) );
+        add_action( 'admin_head', array($this, 'admin_head' ) );
         add_action( 'admin_menu', array($this, 'admin_menu' ) );
+        add_action( 'admin_notices', array( &$this, 'admin_notices' ) );
         add_filter( 'screen_layout_columns', array($this, 'screen_layout_columns'), 10, 2);
     }
 
@@ -273,6 +274,10 @@ class iworks_options
                 }
                 continue;
             }
+            $tr_classes = array(
+                'iworks-options-row',
+                sprintf( 'iworks-options-type-%s', esc_attr( strtolower( $option['type'] ) ) ),
+            );
             if ( $option['type'] == 'heading' ) {
                 if ( $use_tabs ) {
                     if ( $last_tab != $option['label'] ) {
@@ -299,15 +304,18 @@ class iworks_options
                         $content .= '<tbody>';
                     }
                 }
-                $content .= '<tr><td colspan="2">';
+                $content .= sprintf( '<tr class="%s"><td colspan="2">', implode( ' ', $tr_classes ) );
             } elseif ( 'subheading' == $option['type'] ) {
                 $content .= '<tr><td colspan="2">';
             } elseif ( 'hidden' != $option['type'] ) {
-                $style = '';
                 if ( isset($option['related_to'] ) && isset( $related_to[ $option['related_to'] ] ) && $related_to[ $option['related_to'] ] == 0 ) {
-                    $style .= 'style="display:none"';
+                    $classes[] = 'hidden';
                 }
-                $content .= sprintf( '<tr valign="top" id="tr_%s"%s>', $option_name? $option_name:'', $style );
+                $content .= sprintf(
+                    '<tr valign="top" id="tr_%s" class="%s">',
+                    esc_attr( $option_name? $option_name:'' ),
+                    implode( ' ', $tr_classes )
+                );
                 $content .= sprintf(
                     '<th scope="row">%s%s</th>',
                     isset($option['dashicon']) && $option['dashicon']? sprintf('<span class="dashicons dashicons-%s"></span>&nbsp;', $option['dashicon']):'',
@@ -672,7 +680,7 @@ class iworks_options
                 if ( $options['add_table'] ) {
                     $top .= sprintf( '<table class="form-table%s" style="%s">', isset($options['widefat'])? ' widefat':'', isset($options['style'])? $options['style']:'' );
                     if ( isset( $options['thead'] ) ) {
-                        $top .= '<thead><tr>';
+                        $top .= sprintf( '<thead><tr class="%s">', implode( ' ', $tr_classes ) );
                         foreach( $options['thead'] as $text => $colspan ) {
                             $top .= sprintf
                                 (
@@ -1190,6 +1198,32 @@ function iworks_options_tabulator_init()
 
 
         return $value;
+    }
+
+
+    public function admin_head() {
+        $screen = get_current_screen();
+?>
+<style id="<?php echo __CLASS__; ?>" type="text/css">
+.iworks-options .select2 {
+    min-width: 300px;
+}
+.iworks-options .select2 .select2-selection {
+    border-color: #aaa;
+}
+.iworks-options div.ui-slider span.ui-slider-handle {
+    background-color: #08b;
+    cursor: col-resize;
+}
+.iworks-options div.ui-slider {
+    margin-top: 10px;
+    max-width: 200px;
+}
+.iworks-options .iworks-options-type-wpcolorpicker span.description {
+    display: block;
+}
+</style>
+<?php
     }
 
 }
