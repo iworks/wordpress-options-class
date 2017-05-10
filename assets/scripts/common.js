@@ -3,11 +3,40 @@ jQuery(function(){
     if ( jQuery.fn.switchButton ) {
         jQuery('.iworks_options .switch-button').each(function() {
             var options = {
+                checked: jQuery(this).checked,
                 on_label: switch_button.labels.on_label,
                 off_label: switch_button.labels.off_label
             };
-            l(options);
             jQuery(this).switchButton(options);
+        });
+    }
+    if ( jQuery.fn.wpColorPicker ) {
+        jQuery('.wpColorPicker').wpColorPicker();
+    }
+    /**
+     * select2
+     */
+    if ( jQuery.fn.select2 ) {
+        jQuery('.iworks-options .select2').select2();
+    }
+    /**
+     * slider
+     */
+    if ( jQuery.fn.slider ) {
+        jQuery('.iworks-options .slider').each( function() {
+            jQuery(this).parent().append('<div class="ui-slider"></div>' );
+            var target = jQuery(this);
+            var value = target.val();
+            var max = jQuery(this).data('max') || 100;
+            var min = jQuery(this).data('min') || 0;
+            jQuery('.ui-slider', jQuery(this).parent()).slider({
+                value: value,
+                min: min,
+                max: max,
+                slide: function( event, ui ) {
+                    target.val( ui.value );
+                }
+            });
         });
     }
 });

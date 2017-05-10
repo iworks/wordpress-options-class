@@ -41,6 +41,7 @@ class iworks_options
     private $option_prefix;
     private $version;
     private $pagehooks = array();
+    private $scripts_enqueued = array();
     public $notices;
 
     public function __construct()
@@ -344,11 +345,11 @@ class iworks_options
              * classes
              */
             $classes = isset( $option['classes'] )? $option['classes'] : ( isset( $option['class'] )? explode( ' ', $option['class'] ) : array() );
-
-l($classes);
-
             $classes[] = sprintf( 'option-%s', $option['type'] );
 
+            /**
+             * build
+             */
             switch ( $option['type'] ) {
             case 'hidden':
                 $hidden .= sprintf (
@@ -517,7 +518,6 @@ l($classes);
                     }
                 }
                 $option_value = $this->get_option( $option_name, $option_group );
-
                 if ( isset( $option['extra_options'] ) && is_callable( $option['extra_options'] ) ) {
                     $option['options'] = array_merge( $option['options'], $option['extra_options']());
                 }
@@ -943,7 +943,12 @@ l($classes);
             if ( !array_key_exists( 'name', $option ) || !$option['name'] ) {
                 continue;
             }
-            $data[$option['name']] = $this->get_option($option['name']);
+            $value = $this->get_option($option['name']);
+            if ( array_key_exists( 'sanitize_callback', $option ) && is_callable( $option['sanitize_callback'] ) ) {
+                $value = call_user_func( $option['sanitize_callback'], $value );
+
+            }
+            $data[$option['name']] = $value;
         }
         return $data;
     }
@@ -995,9 +1000,8 @@ l($classes);
             );
             $value = array_key_exists( $this->get_option_name($option_name), $_POST )? $_POST[$this->get_option_name($option_name)]:false;
 
-            if ( array_key_exists( 'sanitize', $option ) && is_callable( $option['sanitize'] ) ) {
-                $value = call_user_func( $option['sanitize'], $value );
-
+            if ( array_key_exists( 'sanitize_callback', $option ) && is_callable( $option['sanitize_callback'] ) ) {
+                $value = call_user_func( $option['sanitize_callback'], $value );
             }
             if ( $value ) {
                 $this->update_option( $option_name, $value  );
@@ -1264,6 +1268,9 @@ jQuery(document).ready( function($) {
 
     public function get_files() {
         $f = array(
+            /**
+             * iworks_options core files
+             */
             array(
                 'handle' => __CLASS__,
                 'file' => 'common.css',
@@ -1273,6 +1280,9 @@ jQuery(document).ready( function($) {
                 'file' => 'common.js',
                 'deps' => array( 'jquery', 'switch_button', 'jquery-ui-tabs' ),
             ),
+            /**
+             * switch checkbox
+             */
             array(
                 'handle' => 'switch_button',
                 'file' => 'jquery.switch_button.css',
@@ -1282,9 +1292,23 @@ jQuery(document).ready( function($) {
                 'handle' => 'switch_button',
                 'file' => 'jquery.switch_button.js',
                 'version' => '1.0',
-                'deps' => array( 'jquery', 'jquery-effects-core' ),
+                'deps' => array( 'jquery', 'jquery-effects-core', 'jquery-ui-widget' ),
                 'wp_localize_script' => array( $this, 'get_switch_button_data' ),
-            )
+            ),
+            /**
+             * select2
+             */
+            array(
+                'handle' => 'select2',
+                'file' => 'select2.min.css',
+                'version' => '4.0.3',
+            ),
+            array(
+                'handle' => 'select2',
+                'file' => 'select2.min.js',
+                'version' => '4.0.3',
+                'deps' => array( 'jquery' ),
+            ),
         );
         $files = array();
         foreach( $f as $data ) {

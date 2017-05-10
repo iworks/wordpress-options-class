@@ -9,6 +9,7 @@ Changelog
 ##### 2.4.1 (2017-xx-xx)
 
 * IMPROVMENT: added slide for checkboxes.
+* IMPROVMENT: added select2.
 
 ##### 2.4.0 (2015-11-11)
 
