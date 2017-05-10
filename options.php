@@ -9,7 +9,7 @@ Author URI: http://iworks.pl/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Copyright 2011-2015 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2011-2017 Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -50,11 +50,13 @@ class iworks_options
         $this->option_group         = 'index';
         $this->option_function_name = null;
         $this->option_prefix        = null;
+        $this->files = $this->get_files();
 
         add_action( 'admin_head', array($this, 'admin_head' ) );
         add_action( 'admin_menu', array($this, 'admin_menu' ) );
         add_action( 'admin_notices', array( &$this, 'admin_notices' ) );
         add_filter( 'screen_layout_columns', array($this, 'screen_layout_columns'), 10, 2);
+        add_action( 'admin_enqueue_scripts', array( $this, 'register_styles' ), 0 );
     }
 
     public function init()
@@ -171,6 +173,18 @@ class iworks_options
         $hidden    = '';
         $top       = '';
         $use_tabs  = isset( $options['use_tabs'] ) && $options['use_tabs'];
+        /**
+         * add last_used_tab field
+         */
+        if ( $use_tabs ) {
+           $field = array(
+                'type' => 'hidden',
+                'name' => 'last_used_tab',
+                'id' => 'last_used_tab',
+                'value' => $this->get_option( 'last_used_tab' ),
+            );
+           array_unshift(  $options['options'], $field );
+        }
         /**
          * produce options
          */
@@ -325,12 +339,23 @@ class iworks_options
             }
             $html_element_name = $option_name? $this->option_prefix.$option_name:'';
             $filter_name = $html_element_name? $option_group.'_'.$html_element_name : null;
+
+            /**
+             * classes
+             */
+            $classes = isset( $option['classes'] )? $option['classes'] : ( isset( $option['class'] )? explode( ' ', $option['class'] ) : array() );
+
+l($classes);
+
+            $classes[] = sprintf( 'option-%s', $option['type'] );
+
             switch ( $option['type'] ) {
             case 'hidden':
                 $hidden .= sprintf (
-                    '<input type="hidden" name="%s" value="%s" />',
-                    $html_element_name,
-                    $this->get_option( $option_name, $option_group )
+                    '<input type="hidden" name="%s" value="%s" id="%s" />',
+                    esc_attr( $html_element_name ),
+                    esc_attr( $this->get_option( $option_name, $option_group ) ),
+                    esc_attr( isset( $option['id'] )? $option['id']:'')
                 );
                 break;
             case 'number':
@@ -343,7 +368,7 @@ class iworks_options
                     $option['type'],
                     $html_element_name,
                     $this->get_option( $option_name, $option_group ),
-                    isset($option['class']) && $option['class']? $option['class']:'',
+                    esc_attr( implode( ' ', $classes ) ),
                     $id,
                     isset($option['min'])?  'min="'.$option['min'].'"':'',
                     isset($option['max'])?  'max="'.$option['max'].'"':'',
@@ -363,7 +388,7 @@ class iworks_options
                     $option['type'],
                     $html_element_name,
                     $this->get_option( $option_name, $option_group ),
-                    isset($option['class']) && $option['class']? $option['class']:'',
+                    esc_attr( implode( ' ', $classes ) ),
                     $id,
                     isset($option['label'])? $option['label']:''
                 );
@@ -371,12 +396,13 @@ class iworks_options
             case 'checkbox':
                 $related_to[ $option_name ] = $this->get_option( $option_name, $option_group );
                 $checkbox = sprintf (
-                    '<label for="%s"><input type="checkbox" name="%s" id="%s" value="1"%s%s /> %s</label>',
+                    '<label for="%s"><input type="checkbox" name="%s" id="%s" value="1"%s%s class="%s" /> %s</label>',
                     $html_element_name,
                     $html_element_name,
                     $html_element_name,
                     $related_to[ $option_name ]? ' checked="checked"':'',
                     ( ( isset($option['disabled']) && $option['disabled'] ) or ( isset( $option['need_pro'] ) && $option['need_pro'] ) )? ' disabled="disabled"':'',
+                    esc_attr( implode( ' ', $classes ) ),
                     isset($option['label'])?  $option['label']:''
                 );
                 $content .= apply_filters( $filter_name, $checkbox );
@@ -482,7 +508,6 @@ class iworks_options
                 break;
             case 'select':
             case 'select2':
-                $classes = array();
                 $extra = $name_sufix = '';
                 if ( 'select2' == $option['type'] ) {
                     $classes[] = 'select2';
@@ -754,7 +779,26 @@ class iworks_options
         if ( is_callable( $this->option_function_name ) ) {
             $options = call_user_func( $this->option_function_name );
         }
+        /**
+         * add last_used_tab field
+         */
+        foreach( $options as $key => $data ) {
+            if ( isset( $options[$key]['use_tabs'] ) && $options[$key]['use_tabs'] ) {
+                $field = array(
+                    'type' => 'hidden',
+                    'name' => 'last_used_tab',
+                    'id' => 'last_used_tab',
+                );
+                array_unshift( $options[$key]['options'], $field );
+            }
+        }
+        /**
+         * filter it
+         */
         $options = apply_filters( $this->option_function_name, $options );
+        /**
+         * register_setting
+         */
         foreach( $options as $key => $data ) {
             if ( isset ( $data['options'] ) && is_array( $data['options'] ) ) {
                 $this->register_setting( $data['options'], $key );
@@ -1021,7 +1065,7 @@ class iworks_options
 ?>
 <div class="wrap">
     <h1><?php echo $options['page_title']; ?></h1>
-    <form method="post" action="options.php" id="iworks_upprev_admin_index">
+    <form method="post" action="options.php" id="<?php echo esc_attr( $this->get_option_name( 'admin_index' ) ); ?>" class="iworks_options">
         <?php wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false ); ?>
         <?php wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false ); ?>
         <input type="hidden" name="action" value="save_howto_metaboxes_general" />
@@ -1048,62 +1092,24 @@ class iworks_options
         </div>
     </form>
 </div>
-<script type="text/javascript">
-//<![CDATA[
 <?php
         /**
          * check metaboxes for key
          */
         if ( array_key_exists( 'metaboxes', $this->options[$option_name] ) ) {
 ?>
+<script type="text/javascript" id="<?php echo __CLASS__; ?>">
+//<![CDATA[
 jQuery(document).ready( function($) {
     // close postboxes that should be closed
     $('.if-js-closed').removeClass('if-js-closed').addClass('closed');
     // postboxes setup
     postboxes.add_postbox_toggles('<?php echo $this->pagehooks[$option_name]; ?>');
-});
-<?php
-    }
-        if ( array_key_exists('use_tabs', $this->options[$option_name] ) && $this->options[$option_name]['use_tabs'] ) {
-?>
-jQuery(function(){iworks_options_tabulator_init();});
-/**
- * Tabulator Bootup
- */
-function iworks_options_tabulator_init()
-{
-    if (!jQuery("#hasadmintabs").length) {
-        return;
-    }
-    jQuery('#hasadmintabs').prepend("<ul><\/ul>");
-    jQuery('#hasadmintabs > fieldset').each(function(i){
-        id      = jQuery(this).attr('id');
-        rel     = jQuery(this).attr('rel');
-        caption = jQuery(this).find('h3').text();
-        if ( rel ) {
-            rel = ' class="'+rel+'"';
-        }
-        jQuery('#hasadmintabs > ul').append('<li><a href="#'+id+'"><span'+rel+'>'+caption+"<\/span><\/a><\/li>");
-        jQuery(this).find('h3').hide();
-    });
-    index = 0;
-    jQuery('#hasadmintabs h3').each(function(i){
-        if ( jQuery(this).hasClass( 'selected' ) ) {
-            index = i;
-        }
-    });
-    if ( index < 0 ) index = 0;
-    jQuery("#hasadmintabs").tabs({ active: index });
-    jQuery('#hasadmintabs ul a').click(function(i){
-        jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name('last_used_tab'); ?>]').val(jQuery(this).parent().index());
-    });
-}
-<?php
-        }
-?>
+        });
 //]]>
 </script>
 <?php
+        }
     }
 
     public function load_page()
@@ -1194,36 +1200,23 @@ function iworks_options_tabulator_init()
 
 
     public function sanitize_callback( $value ) {
-        l($value);
-
-
         return $value;
     }
 
 
     public function admin_head() {
         $screen = get_current_screen();
-?>
-<style id="<?php echo __CLASS__; ?>" type="text/css">
-.iworks-options .select2 {
-    min-width: 300px;
-}
-.iworks-options .select2 .select2-selection {
-    border-color: #aaa;
-}
-.iworks-options div.ui-slider span.ui-slider-handle {
-    background-color: #08b;
-    cursor: col-resize;
-}
-.iworks-options div.ui-slider {
-    margin-top: 10px;
-    max-width: 200px;
-}
-.iworks-options .iworks-options-type-wpcolorpicker span.description {
-    display: block;
-}
-</style>
-<?php
+        if ( ! in_array( $screen->id, $this->pagehooks ) ) {
+            return;
+        }
+        $files = $this->get_files();
+        foreach( $files as $data ) {
+            if ( $data['style'] ) {
+                wp_enqueue_style( $data['handle'] );
+            } else {
+                wp_enqueue_script( $data['handle'] );
+            }
+        }
     }
 
     /**
@@ -1248,5 +1241,69 @@ function iworks_options_tabulator_init()
 		}
 		$rgb = array($r, $g, $b);
 		return $rgb; // returns an array with the rgb values
-	}
+    }
+
+    public function register_styles() {
+        $files = $this->get_files();
+        foreach( $files as $data ) {
+            $file = sprintf( 'assets/%s/%s', $data['style']? 'styles':'scripts', $data['file']);
+            $file = plugins_url( $file, __FILE__);
+            $version = isset( $data['version'] )? $data['version'] : $this->version;
+            $deps = isset( $data['deps'] )? $data['deps'] : array();
+            $in_footer = isset( $data['in_footer'] )? $data['in_footer'] : true;
+            if ( $data['style'] ) {
+                wp_register_style( $data['handle'], $file, $deps, $version);
+            } else {
+                wp_register_script( $data['handle'], $file, $deps, $version, $in_footer );
+                if ( isset( $data['wp_localize_script'] ) ) {
+                    wp_localize_script( $data['handle'], $data['handle'], $data['wp_localize_script']() );
+                }
+            }
+        }
+    }
+
+    public function get_files() {
+        $f = array(
+            array(
+                'handle' => __CLASS__,
+                'file' => 'common.css',
+            ),
+            array(
+                'handle' => __CLASS__,
+                'file' => 'common.js',
+                'deps' => array( 'jquery', 'switch_button', 'jquery-ui-tabs' ),
+            ),
+            array(
+                'handle' => 'switch_button',
+                'file' => 'jquery.switch_button.css',
+                'version' => '1.0',
+            ),
+            array(
+                'handle' => 'switch_button',
+                'file' => 'jquery.switch_button.js',
+                'version' => '1.0',
+                'deps' => array( 'jquery', 'jquery-effects-core' ),
+                'wp_localize_script' => array( $this, 'get_switch_button_data' ),
+            )
+        );
+        $files = array();
+        foreach( $f as $data ) {
+            $data['style'] = preg_match( '/css$/', $data['file'] );
+            $files[] = $data;
+        }
+        return $files;
+    }
+
+
+    public function get_switch_button_data() {
+        $data = array(
+            'labels' => array(
+                'off_label' => __( 'OFF', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
+                'on_label' => __( 'ON', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
+            ),
+        );
+        return $data;
+    }
+
+
 }

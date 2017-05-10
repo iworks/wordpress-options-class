@@ -6,6 +6,10 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.4.1 (2017-xx-xx)
+
+* IMPROVMENT: added slide for checkboxes.
+
 ##### 2.4.0 (2015-11-11)
 
 * IMPROVMENT: added ability to create option page in any point of menu
