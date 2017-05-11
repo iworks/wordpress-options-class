@@ -534,10 +534,6 @@ class iworks_options
                         } elseif ( isset( $input['disabled'] ) && $input['disabled'] ) {
                             $disabled = 'disabled="disabled"';
                         }
-
-
-
-
                         $selected = false;
                         if ( is_array( $option_value ) ) {
                             if ( empty( $option_value ) ) {
@@ -565,7 +561,7 @@ class iworks_options
                             esc_attr( $name_sufix ),
                             esc_attr( implode( ' ', $classes ) ),
                             $extra,
-                            esc_html( $select )
+                            $select
                         );
                     }
                 }
