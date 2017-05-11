@@ -472,17 +472,18 @@ class iworks_options
                             } elseif ( isset( $input['disabled'] ) && $input['disabled'] ) {
                                 $disabled = 'disabled="disabled"';
                             }
+                            $classes[] = sanitize_title( $value );
                             $radio .= sprintf(
                                 '<li class="%s%s"><label for="%s"><input type="radio" name="%s" value="%s"%s id="%s" %s/> %s</label>',
-                                sanitize_title( $value ),
+                                esc_attr( implode( ' ', $classes ) ),
                                 $disabled? ' disabled':'',
-                                $id,
-                                $html_element_name,
-                                $value,
+                                esc_attr( $id ),
+                                esc_attr( $html_element_name ),
+                                esc_attr( $value ),
                                 ($option_value == $value or ( empty($option_value) and isset($option['default']) and $value == $option['default'] ) )? ' checked="checked"':'',
-                                $id,
+                                esc_attr( $id ),
                                 $disabled,
-                                $input['label']
+                                esc_html( $input['label'] )
                             );
                             if ( isset( $input['description'] ) ) {
                                 $radio .= sprintf(
@@ -561,10 +562,10 @@ class iworks_options
                             '<select id="%s" name="%s%s" class="%s" %s>%s</select>',
                             esc_attr( $html_element_name ),
                             esc_attr( $html_element_name ),
-                            $name_sufix,
+                            esc_attr( $name_sufix ),
                             esc_attr( implode( ' ', $classes ) ),
                             $extra,
-                            $select
+                            esc_html( $select )
                         );
                     }
                 }
@@ -575,10 +576,10 @@ class iworks_options
                 $content .= sprintf
                     (
                         '<textarea name="%s" class="%s" rows="%d">%s</textarea>',
-                        $html_element_name,
-                        $option['class'],
-                        isset($option['rows'])? $option['rows']:3,
-                        (!$value && isset($option['default']))? $option['default']:$value
+                        esc_attr( $html_element_name ),
+                        esc_attr( implode( ' ', $classes ) ),
+                        esc_attr( isset($option['rows'])? $option['rows']:3 ),
+                        esc_html( (!$value && isset($option['default']))? $option['default']:$value )
                     );
                 break;
             case 'heading':
