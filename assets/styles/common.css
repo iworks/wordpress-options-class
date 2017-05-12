@@ -90,3 +90,8 @@
     outline-width:medium;
 }
 
+@media screen and (max-width: 782px) {
+    .has-right-sidebar .iworks-options #post-body-content {
+        margin: 0;
+    }
+}
