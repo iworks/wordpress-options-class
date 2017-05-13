@@ -34,8 +34,7 @@ if ( class_exists( 'iworks_options' ) ) {
 	return;
 }
 
-class iworks_options
-{
+class iworks_options {
 	private $option_function_name;
 	private $option_group;
 	private $option_prefix;
@@ -45,28 +44,27 @@ class iworks_options
 	public $notices;
 
 	public function __construct() {
-
 		$this->notices              = array();
 		$this->version              = '2.6.0';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
 		$this->files = $this->get_files();
-
+		/**
+		 * hooks
+		 */
+		add_action( 'admin_enqueue_scripts', array( $this, 'register_styles' ), 0 );
 		add_action( 'admin_head', array( $this, 'admin_head' ) );
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'admin_notices', array( &$this, 'admin_notices' ) );
 		add_filter( 'screen_layout_columns', array( $this, 'screen_layout_columns' ), 10, 2 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'register_styles' ), 0 );
 	}
 
 	public function init() {
-
 		$this->get_option_array();
 	}
 
 	public function admin_menu() {
-
 		if ( ! isset( $this->options ) ) {
 			return;
 		}
@@ -107,22 +105,18 @@ class iworks_options
 	}
 
 	public function get_version() {
-
 		return $this->version;
 	}
 
 	public function set_option_function_name( $option_function_name ) {
-
 		$this->option_function_name = $option_function_name;
 	}
 
 	public function set_option_prefix( $option_prefix ) {
-
 		$this->option_prefix = $option_prefix;
 	}
 
 	private function get_option_array() {
-
 		$options = array();
 		if ( array_key_exists( $this->option_group, $options ) && ! empty( $options[ $this->option_group ] ) ) {
 			$options = apply_filters( $this->option_function_name, $this->options );
@@ -139,7 +133,6 @@ class iworks_options
 	}
 
 	public function build_options( $option_group = 'index', $echo = true, $term_id = false ) {
-
 		$this->option_group = $option_group;
 		$options = $this->get_option_array();
 		/**
@@ -741,7 +734,6 @@ class iworks_options
 	}
 
 	private function register_setting( $options, $option_group ) {
-
 		foreach ( $options as $option ) {
 			/**
 			 * don't register setting without type and name
@@ -767,7 +759,6 @@ class iworks_options
 	}
 
 	public function options_init() {
-
 		$options = array();
 		if ( is_callable( $this->option_function_name ) ) {
 			$options = call_user_func( $this->option_function_name );
@@ -802,7 +793,6 @@ class iworks_options
 	}
 
 	public function get_values( $option_name, $option_group = 'index' ) {
-
 		$this->option_group = $option_group;
 		$data = $this->get_option_array();
 		$data = $data['options'];
@@ -821,7 +811,6 @@ class iworks_options
 	}
 
 	public function get_default_value( $option_name, $option_group = 'index' ) {
-
 		$this->option_group = $option_group;
 		$options = $this->get_option_array();
 		/**
@@ -850,7 +839,6 @@ class iworks_options
 	}
 
 	public function activate() {
-
 		$options = apply_filters( $this->option_function_name, call_user_func( $this->option_function_name ) );
 		foreach ( $options as $key => $data ) {
 			foreach ( $data['options'] as $option ) {
@@ -864,7 +852,6 @@ class iworks_options
 	}
 
 	public function deactivate() {
-
 		$options = apply_filters( $this->option_function_name, call_user_func( $this->option_function_name ) );
 		foreach ( $options as $key => $data ) {
 			foreach ( $data['options'] as $option ) {
@@ -886,7 +873,6 @@ class iworks_options
 	}
 
 	public function settings_fields( $option_name, $use_prefix = true ) {
-
 		if ( $use_prefix ) {
 			settings_fields( $this->option_prefix . $option_name );
 		} else {
@@ -899,7 +885,6 @@ class iworks_options
 	 */
 
 	public function admin_notices() {
-
 		if ( empty( $this->notices ) ) {
 			return;
 		}
@@ -913,13 +898,11 @@ class iworks_options
 	 */
 
 	public function add_option( $option_name, $option_value, $autoload = true ) {
-
 		$autoload = $autoload? 'yes':'no';
 		add_option( $this->option_prefix.$option_name, $option_value, null, $autoload );
 	}
 
 	public function get_option( $option_name, $option_group = 'index', $default_value = null, $forece_default = false ) {
-
 		$option_value = get_option( $this->option_prefix.$option_name, null );
 		$default_value = $this->get_default_value( $option_name, $option_group );
 		if ( ( $default_value || $forece_default ) && is_null( $option_value ) ) {
@@ -929,7 +912,6 @@ class iworks_options
 	}
 
 	public function get_all_options() {
-
 		$data = array();
 		$options = $this->get_option_array();
 		foreach ( $options['options'] as $option ) {
@@ -947,12 +929,10 @@ class iworks_options
 	}
 
 	public function get_option_name( $name ) {
-
 		return sprintf( '%s%s', $this->option_prefix, $name );
 	}
 
 	public function update_option( $option_name, $option_value ) {
-
 		/**
 		 * delete if option have a default value
 		 */
@@ -969,7 +949,6 @@ class iworks_options
 	 */
 
 	public function update_taxonomy_options( $option_group, $term_id ) {
-
 		$this->option_group = $option_group;
 		$options = $this->get_option_array();
 		/**
@@ -1009,7 +988,6 @@ class iworks_options
 	 */
 
 	public function select_page_helper( $name, $show_option_none = false, $post_type = 'page' ) {
-
 		$args = array(
 			'echo' => false,
 			'name' => $this->get_option_name( $name ),
@@ -1021,7 +999,6 @@ class iworks_options
 	}
 
 	public function select_category_helper( $name, $hide_empty = null, $show_option_none = false ) {
-
 		$args = array(
 			'echo' => false,
 			'name'         => $this->get_option_name( $name ),
@@ -1036,12 +1013,10 @@ class iworks_options
 	}
 
 	public function get_option_group() {
-
 		return $this->option_group;
 	}
 
 	private function get_option_index_from_screen() {
-
 		$screen = get_current_screen();
 		$key = explode( $this->option_prefix, $screen->id );
 		if ( 2 != count( $key ) ) {
@@ -1051,7 +1026,6 @@ class iworks_options
 	}
 
 	public function show_page() {
-
 		$option_name = $this->get_option_index_from_screen();
 		if ( ! $option_name ) {
 			return;
@@ -1060,9 +1034,9 @@ class iworks_options
 		global $screen_layout_columns;
 		$data = array();
 ?>
-<div class="wrap">
+<div class="wrap iworks_options">
     <h1><?php echo $options['page_title']; ?></h1>
-    <form method="post" action="options.php" id="<?php echo esc_attr( $this->get_option_name( 'admin_index' ) ); ?>" class="iworks_options">
+    <form method="post" action="options.php" id="<?php echo esc_attr( $this->get_option_name( 'admin_index' ) ); ?>">
         <?php wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false ); ?>
         <?php wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false ); ?>
         <input type="hidden" name="action" value="save_howto_metaboxes_general" />
@@ -1110,7 +1084,6 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 	}
 
 	public function load_page() {
-
 		$option_name = $this->get_option_index_from_screen();
 		if ( ! $option_name ) {
 			return;
@@ -1176,9 +1149,6 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 			} else {
 				$styles = $this->options[ $option_name ]['enqueue_styles'];
 			}
-
-			l( $styles );
-
 			foreach ( $styles as $style ) {
 				wp_enqueue_style( $style );
 			}
@@ -1186,7 +1156,6 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 	}
 
 	public function screen_layout_columns( $columns, $screen ) {
-
 		foreach ( $this->pagehooks as $option_name => $pagehook ) {
 			if ( $screen == $pagehook ) {
 				$columns[ $pagehook ] = 2;
@@ -1196,7 +1165,6 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 	}
 
 	public function get_options_by_group( $group ) {
-
 		$opts = array();
 		$options = $this->get_option_array();
 		if ( ! isset( $options['options'] ) || empty( $options['options'] ) ) {
@@ -1217,7 +1185,6 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 	/**
 	 * input types
 	 */
-
 	public function get_field_by_type( $type, $name, $value = '', $args = array() ) {
 		if ( method_exists( $this, $type ) ) {
 			if ( ! isset( $args['class'] ) ) {
@@ -1234,7 +1201,6 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 			if ( is_array( $value ) ) {
 				$value = implode( ' ', $value );
 			}
-
 			$atts .= sprintf( ' %s="%s"', esc_html( $key ), esc_attr( trim( $value ) ) );
 		}
 		return $atts;
@@ -1458,7 +1424,7 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 			} else {
 				wp_register_script( $data['handle'], $file, $deps, $version, $in_footer );
 				if ( isset( $data['wp_localize_script'] ) ) {
-					wp_localize_script( $data['handle'], $data['handle'], $data['wp_localize_script']() );
+					wp_localize_script( $data['handle'], $data['handle'], $data['wp_localize_script'] );
 				}
 			}
 		}
@@ -1491,7 +1457,7 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 				'file' => 'jquery.switch_button.js',
 				'version' => '1.0',
 				'deps' => array( 'jquery', 'jquery-effects-core', 'jquery-ui-widget' ),
-				'wp_localize_script' => array( $this, 'get_switch_button_data' ),
+				'wp_localize_script' => $this->get_switch_button_data(),
 			),
 			/**
 			 * select2
@@ -1516,7 +1482,6 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 		return $files;
 	}
 
-
 	public function get_switch_button_data() {
 		$data = array(
 			'labels' => array(
@@ -1525,5 +1490,14 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 			),
 		);
 		return $data;
+	}
+
+	/**
+	 * Get option page
+	 *
+	 * @since 2.6.0
+	 */
+	public function get_pagehook() {
+		return $this->option_prefix.$this->option_group;
 	}
 }
