@@ -26,17 +26,19 @@ jQuery(function(){
         jQuery('.iworks-options .slider').each( function() {
             jQuery(this).parent().append('<div class="ui-slider"></div>' );
             var target = jQuery(this);
-            var value = target.val();
-            var max = jQuery(this).data('max') || 100;
-            var min = jQuery(this).data('min') || 0;
-            jQuery('.ui-slider', jQuery(this).parent()).slider({
-                value: value,
-                min: min,
-                max: max,
+            var options = {
+                value: target.val(),
+                step:  parseInt( jQuery(this).data('step') || jQuery(this).attr('step') || 1 ),
+                min:   parseInt( jQuery(this).data('min') || jQuery(this).attr('min') || 100 ),
+                max:   parseInt( jQuery(this).data('max') || jQuery(this).attr('max') || 100 ),
                 slide: function( event, ui ) {
                     target.val( ui.value );
                 }
-            });
+            };
+            l(options);
+
+
+            jQuery('.ui-slider', jQuery(this).parent()).slider( options );
         });
     }
 });

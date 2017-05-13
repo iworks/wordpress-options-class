@@ -17,12 +17,12 @@ published by the Free Software Foundation.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
  */
 
@@ -44,12 +44,18 @@ class iworks_options {
 	public $notices;
 
 	public function __construct() {
+		/**
+		 * basic setup
+		 */
 		$this->notices              = array();
 		$this->version              = '2.6.0';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
-		$this->files = $this->get_files();
+		/**
+		 * afer basic setup
+		 */
+		$this->files                = $this->get_files();
 		/**
 		 * hooks
 		 */
@@ -352,20 +358,25 @@ class iworks_options {
 					);
 				break;
 				case 'number':
-					$id = '';
-					if ( isset( $option['use_name_as_id'] ) && $option['use_name_as_id'] ) {
-						$id = sprintf( ' id="%s"', $html_element_name );
+					$args = array();
+					$args_keys = array( 'min', 'max', 'step' );
+					foreach ( $args_keys as $arg_key ) {
+						if ( isset( $option[ $arg_key ] ) ) {
+							$args[ $arg_key ] = $option[ $arg_key ];
+						}
 					}
+					if ( isset( $option['use_name_as_id'] ) && $option['use_name_as_id'] ) {
+						$args['id'] = sprintf( ' id="%s"', $html_element_name );
+					}
+
 					$content .= sprintf(
-						'<input type="%s" name="%s" value="%s" class="%s"%s %s %s /> %s',
+						'<input type="%s" name="%s" value="%s" class="%s" %s /> %s',
 						$option['type'],
 						$html_element_name,
 						$this->get_option( $option_name, $option_group ),
 						esc_attr( implode( ' ', $classes ) ),
-						$id,
-						isset( $option['min'] )?  'min="'.$option['min'].'"':'',
-						isset( $option['max'] )?  'max="'.$option['max'].'"':'',
-						isset( $option['label'] )?  $option['label']:''
+						$this->build_field_attributes( $args ),
+						isset( $option['label'] )? $option['label']:''
 					);
 				break;
 				case 'email':
@@ -396,7 +407,7 @@ class iworks_options {
 						$related_to[ $option_name ]? ' checked="checked"':'',
 						( ( isset( $option['disabled'] ) && $option['disabled'] ) or ( isset( $option['need_pro'] ) && $option['need_pro'] ) )? ' disabled="disabled"':'',
 						esc_attr( implode( ' ', $classes ) ),
-						isset( $option['label'] )?  $option['label']:''
+						isset( $option['label'] )? $option['label']:''
 					);
 					$content .= apply_filters( $filter_name, $checkbox );
 				break;
@@ -532,7 +543,7 @@ class iworks_options {
 									$selected = in_array( $key, $option_value );
 								}
 							} else {
-								$selected  = ($option_value == $key or ( empty( $option_value ) and isset( $option['default'] ) and $key == $option['default'] ) );
+								$selected = ($option_value == $key or ( empty( $option_value ) and isset( $option['default'] ) and $key == $option['default'] ) );
 							}
 
 							$select .= sprintf(
@@ -618,7 +629,7 @@ class iworks_options {
 							isset( $option['class'] ) && $option['class']? $option['class']:'',
 							$id,
 							( isset( $option['need_pro'] ) and $option['need_pro'] )? ' disabled="disabled"':'',
-							isset( $option['label'] )?  $option['label']:'',
+							isset( $option['label'] )? $option['label']:'',
 							$html_element_name
 						)
 					);
