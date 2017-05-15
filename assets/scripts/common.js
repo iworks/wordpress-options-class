@@ -28,16 +28,13 @@ jQuery(function(){
             var target = jQuery(this);
             var options = {
                 value: target.val(),
-                step:  parseInt( jQuery(this).data('step') || jQuery(this).attr('step') || 1 ),
-                min:   parseInt( jQuery(this).data('min') || jQuery(this).attr('min') || 100 ),
-                max:   parseInt( jQuery(this).data('max') || jQuery(this).attr('max') || 100 ),
+                step:  parseInt( target.data('step') || target.attr('step') || 1 ),
+                min:   parseInt( target.data('min') || target.attr('min') || 100 ),
+                max:   parseInt( target.data('max') || target.attr('max') || 100 ),
                 slide: function( event, ui ) {
                     target.val( ui.value );
                 }
             };
-            l(options);
-
-
             jQuery('.ui-slider', jQuery(this).parent()).slider( options );
         });
     }
