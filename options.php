@@ -1309,6 +1309,14 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 			}
 			unset( $args['default'] );
 		}
+		/**
+		 * turn off autocomplete
+		 */
+		if ( 'text' == $type ) {
+			if ( ! isset( $args['autocomplete'] ) ) {
+				$args['autocomplete'] = 'off';
+			}
+		}
 		return sprintf(
 			'<input type="%s" name="%s" value="%s" %s />',
 			esc_attr( $type ),
