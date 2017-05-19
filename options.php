@@ -71,41 +71,74 @@ class iworks_options {
 	}
 
 	public function admin_menu() {
+		$data = $this->get_option_array();
 		if ( ! isset( $this->options ) ) {
 			return;
 		}
-		foreach ( $this->options as $key => $data ) {
-			if ( ! array_key_exists( 'menu', $data ) ) {
-				$data['menu'] = '';
+		$pages = array();
+		$pages['index'] = $data;
+		if ( isset( $data['pages'] ) ) {
+			$pages += $data['pages'];
+		}
+		foreach ( $pages as $key => $data ) {
+			$keys_to_sanitize = array( 'menu', 'parent' );
+			foreach ( $keys_to_sanitize as $key_to_sanitize ) {
+				if ( ! array_key_exists( $key_to_sanitize, $data ) ) {
+					$data[ $key_to_sanitize ] = '';
+				}
 			}
-			switch ( $data['menu'] ) {
-				case 'comments':
-				case 'dashboard':
-				case 'links':
-				case 'management':
-				case 'media':
-				case 'options':
-				case 'pages':
-				case 'plugins':
-				case 'posts':
-				case 'posts':
-				case 'theme':
-				case 'users':
-					$function = sprintf( 'add_%s_page', $data['menu'] );
-				break;
-				default:
-					$function = 'add_menu_page';
-				break;
-			}
-			if ( isset( $data['page_title'] ) ) {
-				$this->pagehooks[ $key ] = $function(
-					$data['page_title'],
-					isset( $data['menu_title'] )? $data['menu_title']:$data['page_title'],
-					'manage_options',
-					$this->get_option_name( $key ),
-					array( $this, 'show_page' )
-				);
-				add_action( 'load-'.$this->pagehooks[ $key ], array( $this, 'load_page' ) );
+			if ( 'submenu' == $data['menu'] ) {
+				if ( ! empty( $data['parent'] ) ) {
+					/**
+					 * Check callback
+					 */
+					$callback = array( $this, 'show_page' );
+					if ( isset( $data['show_page_callback'] ) && is_callable( $data['show_page_callback'] ) ) {
+						$callback = $data['show_page_callback'];
+					}
+					/**
+					 * add submenu
+					 */
+					$this->pagehooks[ $key ] = add_submenu_page(
+						$data['parent'],
+						$data['page_title'],
+						isset( $data['menu_title'] )? $data['menu_title']:$data['page_title'],
+						apply_filters( 'iworks_options_capagility', 'manage_options', 'settings' ),
+						$this->get_option_name( $key ),
+						$callback
+					);
+					add_action( 'load-'.$this->pagehooks[ $key ], array( $this, 'load_page' ) );
+				}
+			} else {
+				switch ( $data['menu'] ) {
+					case 'comments':
+					case 'dashboard':
+					case 'links':
+					case 'management':
+					case 'media':
+					case 'options':
+					case 'pages':
+					case 'plugins':
+					case 'posts':
+					case 'posts':
+					case 'theme':
+					case 'users':
+						$function = sprintf( 'add_%s_page', $data['menu'] );
+					break;
+					default:
+						$function = 'add_menu_page';
+					break;
+				}
+				if ( isset( $data['page_title'] ) ) {
+					$this->pagehooks[ $key ] = $function(
+						$data['page_title'],
+						isset( $data['menu_title'] )? $data['menu_title']:$data['page_title'],
+						'manage_options',
+						$this->get_option_name( $key ),
+						array( $this, 'show_page' )
+					);
+					add_action( 'load-'.$this->pagehooks[ $key ], array( $this, 'load_page' ) );
+				}
 			}
 		}
 	}
@@ -571,13 +604,12 @@ class iworks_options {
 				break;
 				case 'textarea':
 					$value = $this->get_option( $option_name, $option_group );
-					$content .= sprintf(
-						'<textarea name="%s" class="%s" rows="%d">%s</textarea>',
-						esc_attr( $html_element_name ),
-						esc_attr( implode( ' ', $classes ) ),
-						esc_attr( isset( $option['rows'] )? $option['rows']:3 ),
-						esc_html( ( ! $value && isset( $option['default'] ))? $option['default']:$value )
+					$value = ( ! $value && isset( $option['default'] ))? $option['default']:$value;
+					$args = array(
+						'rows' => isset( $option['rows'] )? $option['rows']:3,
+						'class' => $option['class'],
 					);
+					$content .= $this->textarea( $html_element_name, $value, $args );
 				break;
 				case 'heading':
 					if ( isset( $option['label'] ) && $option['label'] ) {
@@ -1036,18 +1068,25 @@ class iworks_options {
 		return $key[1];
 	}
 
-	public function show_page() {
-		$option_name = $this->get_option_index_from_screen();
-		if ( ! $option_name ) {
-			return;
+	public function show_page( $check_option_name = true, $url = 'options.php' ) {
+
+		$options = array();
+		$option_name = 'index';
+		if ( $check_option_name ) {
+			$option_name = $this->get_option_index_from_screen();
+			if ( ! $option_name ) {
+				return;
+			}
+			$options = $this->options[ $option_name ];
+		} else {
+			$options = $this->get_option_array();
 		}
-		$options = $this->options[ $option_name ];
 		global $screen_layout_columns;
 		$data = array();
 ?>
 <div class="wrap iworks_options">
     <h1><?php echo $options['page_title']; ?></h1>
-    <form method="post" action="options.php" id="<?php echo esc_attr( $this->get_option_name( 'admin_index' ) ); ?>">
+    <form method="post" action="<?php echo esc_url( $url ); ?>" id="<?php echo esc_attr( $this->get_option_name( 'admin_index' ) ); ?>">
         <?php wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false ); ?>
         <?php wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false ); ?>
         <input type="hidden" name="action" value="save_howto_metaboxes_general" />
@@ -1079,6 +1118,7 @@ if ( array_key_exists( 'metaboxes', $this->options[ $option_name ] ) ) {
 		 * check metaboxes for key
 		 */
 if ( array_key_exists( 'metaboxes', $this->options[ $option_name ] ) ) {
+	include_once( ABSPATH . '/wp-admin/includes/meta-boxes.php' );
 ?>
 <script type="text/javascript" id="<?php echo __CLASS__; ?>">
 //<![CDATA[
