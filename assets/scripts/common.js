@@ -27,10 +27,10 @@ jQuery(function(){
             jQuery(this).parent().append('<div class="ui-slider"></div>' );
             var target = jQuery(this);
             var options = {
-                value: target.val(),
-                step:  parseInt( target.data('step') || target.attr('step') || 1 ),
-                min:   parseInt( target.data('min') || target.attr('min') || 100 ),
-                max:   parseInt( target.data('max') || target.attr('max') || 100 ),
+                value: parseInt( target.val() ),
+                step:  parseInt( target.data('step') || target.attr('step') ||   1 ),
+                min:   parseInt( target.data('min')  || target.attr('min')  ||   0 ),
+                max:   parseInt( target.data('max')  || target.attr('max')  || 100 ),
                 slide: function( event, ui ) {
                     target.val( ui.value );
                 }

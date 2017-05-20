@@ -6,7 +6,11 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
-##### 2.6.0 (2017-xx-xx)
+##### 2.6.1 (2017-05-20)
+
+* Fixed problem with jQuery UI slider, there was 100 as default for min value.
+
+##### 2.6.0 (2017-05-12)
 
 * IMPROVMENT: added slide for checkboxes.
 * IMPROVMENT: added select2.
