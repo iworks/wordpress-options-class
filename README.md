@@ -6,6 +6,10 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.6.2 (2017-05-23)
+
+* Fixed a problem with classes for textarea tag.
+
 ##### 2.6.1 (2017-05-20)
 
 * Fixed problem with jQuery UI slider, there was 100 as default for min value.

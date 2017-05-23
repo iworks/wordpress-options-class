@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.6.1
+Version: 2.6.2
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -48,7 +48,7 @@ class iworks_options {
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '2.6.1';
+		$this->version              = '2.6.2';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -607,7 +607,7 @@ class iworks_options {
 					$value = ( ! $value && isset( $option['default'] ))? $option['default']:$value;
 					$args = array(
 						'rows' => isset( $option['rows'] )? $option['rows']:3,
-						'class' => $option['class'],
+						'class' => implode( ' ', $option['classes'] ),
 					);
 					$content .= $this->textarea( $html_element_name, $value, $args );
 				break;
