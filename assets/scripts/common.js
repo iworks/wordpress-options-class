@@ -1,5 +1,8 @@
 jQuery(function(){
     iworks_options_tabulator_init();
+    /**
+     * Switch button
+     */
     if ( jQuery.fn.switchButton ) {
         jQuery('.iworks_options .switch-button').each(function() {
             var options = {
@@ -10,6 +13,9 @@ jQuery(function(){
             jQuery(this).switchButton(options);
         });
     }
+    /**
+     * Color picker
+     */
     if ( jQuery.fn.wpColorPicker ) {
         jQuery('.wpColorPicker').wpColorPicker();
     }
