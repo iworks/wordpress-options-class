@@ -6,6 +6,10 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.6.3 (2017-10-09)
+
+* Added $option['options'] sanitization.
+
 ##### 2.6.2 (2017-05-23)
 
 * Fixed a problem with classes for textarea tag.
