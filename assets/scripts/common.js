@@ -4,7 +4,7 @@ jQuery(function(){
      * Switch button
      */
     if ( jQuery.fn.switchButton ) {
-        jQuery('.iworks_options .switch-button').each(function() {
+        jQuery('.iworks_options .switch-button, .iworks-options-switch-button').each(function() {
             var options = {
                 checked: jQuery(this).checked,
                 on_label: switch_button.labels.on_label,

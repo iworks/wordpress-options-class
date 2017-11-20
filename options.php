@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.6.3
+Version: 2.6.4
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -48,7 +48,7 @@ class iworks_options {
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '2.6.3';
+		$this->version              = '2.6.4';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -1244,9 +1244,22 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 	 */
 	public function get_field_by_type( $type, $name, $value = '', $args = array() ) {
 		if ( method_exists( $this, $type ) ) {
+			wp_enqueue_style( __CLASS__ );
 			if ( ! isset( $args['class'] ) ) {
-				$args['class'] = array( 'large-text' );
+				switch ( $type ) {
+					case 'switch_button':
+						wp_enqueue_script( __CLASS__ );
+						wp_enqueue_style( 'switch_button' );
+					break;
+					case 'checkbox':
+					case 'radio':
+					break;
+					default:
+						$args['class'] = array( 'large-text' );
+					break;
+				}
 			}
+			$args['class'][] = sprintf( 'iworks-options-%s', preg_replace( '/_/', '-', esc_attr( $type ) ) );
 			return $this->$type( $name, $value, $args );
 		}
 		return sprintf( 'wrong type: %s', esc_html( $type ) );
@@ -1330,6 +1343,24 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 			esc_attr( $value ),
 			$this->build_field_attributes( $args )
 		);
+	}
+
+	/**
+	 * Checkbox HTML element
+	 *
+	 * @since 2.6.4
+	 */
+	private function checkbox( $name, $value = '', $args = array() ) {
+		return $this->input( $name, $value, $args, __FUNCTION__ );
+	}
+
+	/**
+	 * Switch button element (based on checkbox field).
+	 *
+	 * @since 2.6.4
+	 */
+	private function switch_button( $name, $value = '', $args = array() ) {
+		return $this->checkbox( $name, $value, $args );
 	}
 
 	private function text( $name, $value = '', $args = array() ) {

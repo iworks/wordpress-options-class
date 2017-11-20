@@ -6,6 +6,10 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.6.3 (2017-xx-xx)
+
+* Handle "checkbox", and "switch_button" fields.
+
 ##### 2.6.3 (2017-10-09)
 
 * Added $option['options'] sanitization.
