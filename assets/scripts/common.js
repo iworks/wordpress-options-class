@@ -7,8 +7,8 @@ jQuery(function(){
         jQuery('.iworks_options .switch-button, .iworks-options-switch-button').each(function() {
             var options = {
                 checked: jQuery(this).checked,
-                on_label: switch_button.labels.on_label,
-                off_label: switch_button.labels.off_label
+                on_label: jQuery(this).data('on_label') || switch_button.labels.on_label,
+                off_label: jQuery(this).data('off_label') || switch_button.labels.off_label
             };
             jQuery(this).switchButton(options);
         });
