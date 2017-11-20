@@ -1351,6 +1351,9 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 	 * @since 2.6.4
 	 */
 	private function checkbox( $name, $value = '', $args = array() ) {
+		if ( ! empty( $value ) ) {
+			$args['checked'] = 'checked';
+		}
 		return $this->input( $name, $value, $args, __FUNCTION__ );
 	}
 
