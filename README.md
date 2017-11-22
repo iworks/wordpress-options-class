@@ -9,6 +9,7 @@ Changelog
 ##### 2.6.3 (2017-xx-xx)
 
 * Handle "checkbox", and "switch_button" fields.
+* Improved submenu building.
 
 ##### 2.6.3 (2017-10-09)
 

@@ -78,7 +78,7 @@ class iworks_options {
 		$pages = array();
 		$pages['index'] = $data;
 		if ( isset( $data['pages'] ) ) {
-			$pages += $data['pages'];
+			$pages = $data['pages'] + $pages;
 		}
 		foreach ( $pages as $key => $data ) {
 			$keys_to_sanitize = array( 'menu', 'parent' );
@@ -96,6 +96,9 @@ class iworks_options {
 					if ( isset( $data['show_page_callback'] ) && is_callable( $data['show_page_callback'] ) ) {
 						$callback = $data['show_page_callback'];
 					}
+					if ( isset( $data['set_callback_to_null'] ) && $data['set_callback_to_null'] ) {
+						$callback = null;
+					}
 					/**
 					 * add submenu
 					 */
@@ -103,8 +106,8 @@ class iworks_options {
 						$data['parent'],
 						$data['page_title'],
 						isset( $data['menu_title'] )? $data['menu_title']:$data['page_title'],
-						apply_filters( 'iworks_options_capagility', 'manage_options', 'settings' ),
-						$this->get_option_name( $key ),
+						apply_filters( 'iworks_options_capability', 'manage_options', 'settings' ),
+						isset( $data['menu_slug'] )? $data['menu_slug']: $this->get_option_name( $key ),
 						$callback
 					);
 					add_action( 'load-'.$this->pagehooks[ $key ], array( $this, 'load_page' ) );
