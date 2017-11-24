@@ -10,6 +10,7 @@ Changelog
 
 * Handle "checkbox", and "switch_button" fields.
 * Improved submenu building.
+* Added ability to produce "hidden" name, prefixed by underscore.
 
 ##### 2.6.3 (2017-10-09)
 

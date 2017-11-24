@@ -980,8 +980,23 @@ class iworks_options {
 		return $data;
 	}
 
-	public function get_option_name( $name ) {
-		return sprintf( '%s%s', $this->option_prefix, $name );
+	/**
+	 * Get option name by adding prefix.
+	 *
+	 * @since 1.0
+	 * @since 2.6.4 Added `hidden` argument.
+	 *
+	 * @param string $name Name of option.
+	 * @param boolean $hidden If this hidden value.
+	 *
+	 * @return string $option_name
+	 */
+	public function get_option_name( $name, $hidden = false ) {
+		$option_name = sprintf( '%s%s', $this->option_prefix, $name );
+		if ( $hidden ) {
+			$option_name = sprintf( '_%s', $option_name );
+		}
+		return $option_name;
 	}
 
 	public function update_option( $option_name, $option_value ) {
