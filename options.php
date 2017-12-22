@@ -199,7 +199,6 @@ class iworks_options {
 			echo '<div class="below-h2 error"><p><strong>'.__( 'An error occurred while getting the configuration.', 'IWORKS_OPTIONS_TEXTDOMAIN' ).'</strong></p></div>';
 			return;
 		}
-
 		/**
 		 * proceder
 		 */
@@ -374,13 +373,11 @@ class iworks_options {
 			}
 			$html_element_name = $option_name? $this->option_prefix.$option_name:'';
 			$filter_name = $html_element_name? $option_group.'_'.$html_element_name : null;
-
 			/**
 			 * classes
 			 */
 			$classes = isset( $option['classes'] )? $option['classes'] : ( isset( $option['class'] )? explode( ' ', $option['class'] ) : array() );
 			$classes[] = sprintf( 'option-%s', $option['type'] );
-
 			/**
 			 * build
 			 */
@@ -404,7 +401,6 @@ class iworks_options {
 					if ( isset( $option['use_name_as_id'] ) && $option['use_name_as_id'] ) {
 						$args['id'] = sprintf( ' id="%s"', $html_element_name );
 					}
-
 					$content .= sprintf(
 						'<input type="%s" name="%s" value="%s" class="%s" %s /> %s',
 						$option['type'],
@@ -567,7 +563,6 @@ class iworks_options {
 						$option['options'] = array_merge( $option['options'], $option['extra_options']() );
 					}
 					$option['options'] = apply_filters( $filter_name.'_data', $option['options'], $option_name, $option_value );
-
 					$select = apply_filters( $filter_name.'_content', null, $option['options'], $html_element_name, $option_name, $option_value );
 					$select = apply_filters( 'iworks_options_'.$option_name.'_content', null, $option['options'], $html_element_name, $option_name, $option_value );
 					if ( empty( $select ) ) {
@@ -587,7 +582,6 @@ class iworks_options {
 							} else {
 								$selected = ($option_value == $key or ( empty( $option_value ) and isset( $option['default'] ) and $key == $option['default'] ) );
 							}
-
 							$select .= sprintf(
 								'<option %s value="%s" %s %s >%s</option>',
 								$disabled? 'class="disabled"':'',
@@ -616,7 +610,7 @@ class iworks_options {
 					$value = ( ! $value && isset( $option['default'] ))? $option['default']:$value;
 					$args = array(
 						'rows' => isset( $option['rows'] )? $option['rows']:3,
-						'class' => implode( ' ', $option['classes'] ),
+						'class' => isset( $option['classes'] )? implode( ' ', $option['classes'] ):'',
 					);
 					$content .= $this->textarea( $html_element_name, $value, $args );
 				break;
@@ -771,12 +765,10 @@ class iworks_options {
 		if ( $options['show_submit_button'] ) {
 			$content .= get_submit_button( __( 'Save Changes' ), 'primary', 'submit_button' );
 		}
-
 		/**
 		 * iworks-options wrapper
 		 */
 		$content = sprintf( '<div class="iworks-options">%s</div>', $content );
-
 		/* print ? */
 		if ( $echo ) {
 			echo $content;
@@ -935,7 +927,6 @@ class iworks_options {
 	/**
 	 * admin_notices
 	 */
-
 	public function admin_notices() {
 		if ( empty( $this->notices ) ) {
 			return;
@@ -948,7 +939,6 @@ class iworks_options {
 	/**
 	 * options: add, get, update
 	 */
-
 	public function add_option( $option_name, $option_value, $autoload = true ) {
 		$autoload = $autoload? 'yes':'no';
 		add_option( $this->option_prefix.$option_name, $option_value, null, $autoload );
@@ -973,7 +963,6 @@ class iworks_options {
 			$value = $this->get_option( $option['name'] );
 			if ( array_key_exists( 'sanitize_callback', $option ) && is_callable( $option['sanitize_callback'] ) ) {
 				$value = call_user_func( $option['sanitize_callback'], $value );
-
 			}
 			$data[ $option['name'] ] = $value;
 		}
@@ -1014,7 +1003,6 @@ class iworks_options {
 	/**
 	 * update taxonomy options
 	 */
-
 	public function update_taxonomy_options( $option_group, $term_id ) {
 		$this->option_group = $option_group;
 		$options = $this->get_option_array();
@@ -1038,7 +1026,6 @@ class iworks_options {
 				$option['name']
 			);
 			$value = array_key_exists( $this->get_option_name( $option_name ), $_POST )? $_POST[ $this->get_option_name( $option_name ) ]:false;
-
 			if ( array_key_exists( 'sanitize_callback', $option ) && is_callable( $option['sanitize_callback'] ) ) {
 				$value = call_user_func( $option['sanitize_callback'], $value );
 			}
@@ -1053,7 +1040,6 @@ class iworks_options {
 	/**
 	 * helpers
 	 */
-
 	public function select_page_helper( $name, $show_option_none = false, $post_type = 'page' ) {
 		$args = array(
 			'echo' => false,
@@ -1093,7 +1079,6 @@ class iworks_options {
 	}
 
 	public function show_page( $check_option_name = true, $url = 'options.php' ) {
-
 		$options = array();
 		$option_name = 'index';
 		if ( $check_option_name ) {
@@ -1315,9 +1300,7 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 		if ( empty( $options ) && ! empty( $value ) ) {
 			$options[ $value['value'] ] = $value['label'];
 		}
-
 		$value_to_check = isset( $value['value'] ) ? $value['value'] : false;
-
 		$content = sprintf(
 			'<select type="%s" name="%s" %s >',
 			esc_attr( $type ),
@@ -1514,7 +1497,6 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 	 */
 	public function hex2rgb( $hex ) {
 		$hex = str_replace( '#', '', $hex );
-
 		if ( strlen( $hex ) == 3 ) {
 			$r = hexdec( substr( $hex,0,1 ).substr( $hex,0,1 ) );
 			$g = hexdec( substr( $hex,1,1 ).substr( $hex,1,1 ) );

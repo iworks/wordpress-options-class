@@ -6,11 +6,12 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
-##### 2.6.3 (2017-xx-xx)
+##### 2.6.4 (2017-12-22)
 
+* Added ability to produce "hidden" name, prefixed by underscore.
+* Fixed prolblem with warning. Props for [Michał](https://wordpress.org/support/users/lupinek/)
 * Handle "checkbox", and "switch_button" fields.
 * Improved submenu building.
-* Added ability to produce "hidden" name, prefixed by underscore.
 
 ##### 2.6.3 (2017-10-09)
 
