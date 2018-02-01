@@ -9,7 +9,7 @@ Author URI: http://iworks.pl/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Copyright 2011-2017 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2011-2018 Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -1333,6 +1333,22 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 	}
 
 	private function text( $name, $value = '', $args = array() ) {
+		return $this->input( $name, $value, $args, __FUNCTION__ );
+	}
+
+	private function number( $name, $value = '', $args = array() ) {
+		return $this->input( $name, $value, $args, __FUNCTION__ );
+	}
+
+	private function button( $name, $value = '', $args = array() ) {
+		return $this->input( $name, $value, $args, __FUNCTION__ );
+    }
+
+	private function submit( $name, $value = '', $args = array() ) {
+		return $this->input( $name, $value, $args, __FUNCTION__ );
+	}
+
+	private function hidden( $name, $value = '', $args = array() ) {
 		return $this->input( $name, $value, $args, __FUNCTION__ );
 	}
 

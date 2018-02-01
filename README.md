@@ -6,6 +6,10 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.6.4 (2018-xx-xx)
+
+* Added methods: number, button, submit and hidden to allow create those form elements.
+
 ##### 2.6.3 (2017-10-09)
 
 * Added $option['options'] sanitization.
