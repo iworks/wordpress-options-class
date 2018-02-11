@@ -9,6 +9,7 @@ Changelog
 ##### 2.6.5 (2018-xx-xx)
 
 * Added methods: number, button, submit and hidden to allow create those form elements.
+* Allow to use simple array for radio options.
 
 ##### 2.6.4 (2017-12-22)
 

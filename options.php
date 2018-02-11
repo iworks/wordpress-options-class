@@ -1440,7 +1440,7 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 				esc_attr( $option_value ),
 				checked( $option_value, $value, false ),
 				esc_attr( $id ),
-				esc_html( $input['label'] )
+				esc_html( is_string( $input )? $input:$input['label'] )
 			);
 			if ( isset( $input['description'] ) ) {
 				$radio .= sprintf(
