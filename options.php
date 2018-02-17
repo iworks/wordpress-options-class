@@ -35,12 +35,19 @@ if ( class_exists( 'iworks_options' ) ) {
 }
 
 class iworks_options {
+
 	private $option_function_name;
 	private $option_group;
 	private $option_prefix;
 	private $version;
 	private $pagehooks = array();
 	private $scripts_enqueued = array();
+	/**
+	 * Controll class mode.
+	 * @since 2.6.5
+	 */
+	private $mode = 'plugin';
+
 	public $notices;
 
 	public function __construct() {
@@ -68,6 +75,19 @@ class iworks_options {
 
 	public function init() {
 		$this->get_option_array();
+	}
+
+	/**
+	 * Set option class mode.
+	 *
+	 * @since 2.6.5
+	 *
+	 * @param string $mode Working mode, possible values "plugin", "theme".
+	 */
+	public function set_mode( $mode ) {
+		if ( preg_match( '/^(plugin|theme)$/', $mode ) ) {
+			$this->mode = $mode;
+		}
 	}
 
 	public function admin_menu() {
@@ -1377,7 +1397,7 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 
 	private function button( $name, $value = '', $args = array() ) {
 		return $this->input( $name, $value, $args, __FUNCTION__ );
-    }
+	}
 
 	private function submit( $name, $value = '', $args = array() ) {
 		return $this->input( $name, $value, $args, __FUNCTION__ );
@@ -1530,7 +1550,12 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 		$files = $this->get_files();
 		foreach ( $files as $data ) {
 			$file = sprintf( 'assets/%s/%s', $data['style']? 'styles':'scripts', $data['file'] );
-			$file = plugins_url( $file, __FILE__ );
+			if ( 'theme' == $this->mode ) {
+				$url = str_replace( get_template_directory(), '', dirname( __FILE__ ) );
+				$file = get_template_directory_uri().$url.'/'.$file;
+			} else {
+				$file = plugins_url( $file, __FILE__ );
+			}
 			$version = isset( $data['version'] )? $data['version'] : $this->version;
 			$deps = isset( $data['deps'] )? $data['deps'] : array();
 			$in_footer = isset( $data['in_footer'] )? $data['in_footer'] : true;

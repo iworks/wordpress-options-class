@@ -10,6 +10,7 @@ Changelog
 
 * Added methods: number, button, submit and hidden to allow create those form elements.
 * Allow to use simple array for radio options.
+* Handle "theme" mode to fix assets URl.
 
 ##### 2.6.4 (2017-12-22)
 
