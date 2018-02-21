@@ -1299,6 +1299,9 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 		return $atts;
 	}
 
+	/**
+	 * Print HTML select
+	 */
 	private function select( $name, $value = '', $args = array(), $type = 'text' ) {
 		/**
 		 * default value
@@ -1320,7 +1323,7 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 		if ( empty( $options ) && ! empty( $value ) ) {
 			$options[ $value['value'] ] = $value['label'];
 		}
-		$value_to_check = isset( $value['value'] ) ? $value['value'] : false;
+		$value_to_check = is_array( $value ) && isset( $value['value'] ) ? $value['value'] : $value;
 		$content = sprintf(
 			'<select type="%s" name="%s" %s >',
 			esc_attr( $type ),

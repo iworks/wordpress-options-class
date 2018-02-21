@@ -8,6 +8,7 @@ Changelog
 
 ##### 2.6.5 (2018-xx-xx)
 
+* Added check for `select()` function. Now we can use array or string as value.
 * Added methods: number, button, submit and hidden to allow create those form elements.
 * Allow to use simple array for radio options.
 * Handle "theme" mode to fix assets URl.
