@@ -1357,12 +1357,28 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 				$args['autocomplete'] = 'off';
 			}
 		}
+		/**
+		 * before & after
+		 */
+		$keys = array( 'before', 'after' );
+		foreach ( $keys as $key ) {
+			$$key = '';
+			if ( isset( $args[ $key ] ) ) {
+				$$key = $args[ $key ];
+				unset( $args[ $key ] );
+			}
+		}
+		/**
+		 * produce
+		 */
 		return sprintf(
-			'<input type="%s" name="%s" value="%s" %s />',
+			'%s<input type="%s" name="%s" value="%s" %s />%s',
+			$before,
 			esc_attr( $type ),
 			esc_attr( $name ),
 			esc_attr( $value ),
-			$this->build_field_attributes( $args )
+			$this->build_field_attributes( $args ),
+			$after
 		);
 	}
 
