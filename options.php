@@ -1596,7 +1596,7 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 			 */
 			array(
 				'handle' => __CLASS__,
-				'file' => 'common.css',
+				'file' => 'jquery-ui.min.css',
 			),
 			array(
 				'handle' => __CLASS__,
