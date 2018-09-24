@@ -6,6 +6,9 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.6.6 (2018-09-24)
+* Added CSS for tabs.
+
 ##### 2.6.5 (2018-03-15)
 
 * Added 'before' and 'after' strings for input() function.
