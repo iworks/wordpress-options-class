@@ -783,7 +783,7 @@ class iworks_options {
 		 * submit button
 		 */
 		if ( $options['show_submit_button'] ) {
-			$content .= get_submit_button( __( 'Save Changes' ), 'primary', 'submit_button' );
+			$content .= get_submit_button( __( 'Save Changes', 'IWORKS_OPTIONS_TEXTDOMAIN' ), 'primary', 'submit_button' );
 		}
 		/**
 		 * iworks-options wrapper
