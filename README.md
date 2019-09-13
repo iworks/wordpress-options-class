@@ -6,6 +6,9 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.6.7 (2019-xx-xx)
+* Implemented WordPress PSR.
+
 ##### 2.6.6 (2018-09-24)
 * Added CSS for tabs.
 
