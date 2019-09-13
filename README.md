@@ -8,6 +8,8 @@ Changelog
 
 ##### 2.6.7 (2019-xx-xx)
 * Implemented WordPress PSR.
+* Added options to money field.
+* Added few checks to avoid wrong key warning.
 
 ##### 2.6.6 (2018-09-24)
 * Added CSS for tabs.

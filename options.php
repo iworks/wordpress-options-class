@@ -91,6 +91,20 @@ class iworks_options {
 		}
 	}
 
+	/**
+	 * Get group
+	 *
+	 * @since 2.6.7
+	 *
+	 * @param string $option_group Name of config group.
+	 */
+	public function get_group( $option_group = null ) {
+		if ( null === $option_group ) {
+			$option_group = $this->option_group;
+		}
+		return $this->get_option_array( $option_group );
+	}
+
 	public function admin_menu() {
 		$data = $this->get_option_array();
 		if ( ! isset( $this->options ) ) {
@@ -179,18 +193,21 @@ class iworks_options {
 		$this->option_prefix = $option_prefix;
 	}
 
-	private function get_option_array() {
+	private function get_option_array( $option_group = null ) {
+		if ( null === $option_group ) {
+			$option_group = $this->option_group;
+		}
 		$options = array();
-		if ( array_key_exists( $this->option_group, $options ) && ! empty( $options[ $this->option_group ] ) ) {
+		if ( array_key_exists( $option_group, $options ) && ! empty( $options[ $option_group ] ) ) {
 			$options = apply_filters( $this->option_function_name, $this->options );
-			return $options[ $this->option_group ];
+			return $options[ $option_group ];
 		}
 		if ( is_callable( $this->option_function_name ) ) {
 			$options = apply_filters( $this->option_function_name, call_user_func( $this->option_function_name ) );
 		}
-		if ( array_key_exists( $this->option_group, $options ) && ! empty( $options[ $this->option_group ] ) ) {
-			$this->options[ $this->option_group ] = $options[ $this->option_group ];
-			return apply_filters( $this->option_function_name, $this->options[ $this->option_group ] );
+		if ( array_key_exists( $option_group, $options ) && ! empty( $options[ $option_group ] ) ) {
+			$this->options[ $option_group ] = $options[ $option_group ];
+			return apply_filters( $this->option_function_name, $this->options[ $option_group ] );
 		}
 		return apply_filters( $this->option_function_name, array() );
 	}
@@ -806,7 +823,7 @@ class iworks_options {
 			/**
 			 * don't register setting without type and name
 			 */
-			if ( ! array_key_exists( 'type', $option ) || ! array_key_exists( 'name', $option ) ) {
+			if ( ! is_array( $option ) || ! array_key_exists( 'type', $option ) || ! array_key_exists( 'name', $option ) ) {
 				continue;
 			}
 			/**
@@ -910,7 +927,11 @@ class iworks_options {
 		$options = apply_filters( $this->option_function_name, call_user_func( $this->option_function_name ) );
 		foreach ( $options as $key => $data ) {
 			foreach ( $data['options'] as $option ) {
-				if ( $option['type'] == 'heading' or ! isset( $option['name'] ) or ! $option['name'] or ! isset( $option['default'] ) ) {
+				if (
+					( isset( $option['type'] ) && $option['type'] == 'heading' )
+					or ! isset( $option['name'] )
+					or ! $option['name'] or ! isset( $option['default'] )
+				) {
 					continue;
 				}
 				add_option( $this->option_prefix . $option['name'], $option['default'], '', isset( $option['autoload'] ) ? $option['autoload'] : 'yes' );
@@ -923,7 +944,11 @@ class iworks_options {
 		$options = apply_filters( $this->option_function_name, call_user_func( $this->option_function_name ) );
 		foreach ( $options as $key => $data ) {
 			foreach ( $data['options'] as $option ) {
-				if ( 'heading' == $option['type'] or ! isset( $option['name'] ) or ! $option['name'] ) {
+				if (
+					( isset( $option['type'] ) && 'heading' == $option['type'] )
+					or ! isset( $option['name'] )
+					or ! $option['name']
+				) {
 					continue;
 				}
 				/**
@@ -1513,25 +1538,43 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 				'fractional' => 0,
 			);
 		}
+		$args    = wp_parse_args(
+			$args,
+			array(
+				'kind'             => 'complex',
+				'currency'         => false,
+				'currency_default' => false,
+			)
+		);
 		$content = '';
 		/**
 		 * Integer
 		 */
 		$n        = sprintf( '%s[integer]', $name );
 		$content .= $this->input( $n, $value['integer'], array( 'min' => 0 ), 'number' );
-		/**
-		 * fractional
-		 */
-		$n        = sprintf( '%s[fractional]', $name );
-		$content .= $this->input(
-			$n,
-			$value['fractional'],
-			array(
-				'min' => 0,
-				'max' => 99,
-			),
-			'number'
-		);
+		if ( 'complex' === $args['kind'] ) {
+			/**
+			 * fractional
+			 */
+			$n        = sprintf( '%s[fractional]', $name );
+			$content .= $this->input(
+				$n,
+				$value['fractional'],
+				array(
+					'min' => 0,
+					'max' => 99,
+				),
+				'number'
+			);
+		}
+		if ( is_array( $args['currency'] ) && ! empty( $args['currency'] ) ) {
+			$n        = sprintf( '%s[currency]', $name );
+			$atts     = array(
+				'default' => $args['currency_default'],
+				'options' => $args['currency'],
+			);
+			$content .= $this->select( $n, $value['currency'], $atts );
+		}
 		return $content;
 	}
 
