@@ -1532,12 +1532,17 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 	}
 
 	private function money( $name, $value = '', $args = array() ) {
-		if ( empty( $value ) || ! is_array( $value ) ) {
-			$value = array(
+        if ( empty( $value ) || ! is_array( $value ) ) {
+            $value = array();
+        }
+        $value = wp_parse_args(
+            $value,
+            array(
 				'integer'    => 0,
-				'fractional' => 0,
-			);
-		}
+                'fractional' => 0,
+                'currency' => false,
+            )
+        );
 		$args    = wp_parse_args(
 			$args,
 			array(
@@ -1577,6 +1582,23 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 		}
 		return $content;
 	}
+
+    private function location( $name, $value = '', $args = array() ) {
+        if ( empty( $value ) || ! is_array( $value ) ) {
+            $value = array();
+        }
+		$content = '';
+        $value = wp_parse_args(
+            $value,
+            array(
+                'country'    => '',
+                'city'    => '',
+                'street'    => '',
+                'zip'    => '',
+            )
+        );
+        return $content;
+    }
 
 	public function sanitize_callback( $value ) {
 		return $value;
@@ -1721,5 +1743,5 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 	 */
 	public function get_pagehook() {
 		return $this->option_prefix . $this->option_group;
-	}
+    }
 }

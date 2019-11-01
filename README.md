@@ -10,6 +10,7 @@ Changelog
 * Implemented WordPress PSR.
 * Added options to money field.
 * Added few checks to avoid wrong key warning.
+* Added field type "location".
 
 ##### 2.6.6 (2018-09-24)
 * Added CSS for tabs.
