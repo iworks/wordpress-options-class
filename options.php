@@ -9,7 +9,7 @@ Author URI: http://iworks.pl/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Copyright 2011-2018 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2011-2019 Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -1587,16 +1587,34 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
         if ( empty( $value ) || ! is_array( $value ) ) {
             $value = array();
         }
-		$content = '';
-        $value = wp_parse_args(
-            $value,
-            array(
-                'country'    => '',
-                'city'    => '',
-                'street'    => '',
-                'zip'    => '',
-            )
+        $defaults = array(
+            'country'    => '',
+            'city'    => '',
+            'street'    => '',
+            'zip'    => '',
         );
+        $i18n = array(
+            'country'    => __( 'Country', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
+            'city'    => __( 'City', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
+            'street'    => __( 'Street', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
+            'zip'    => __( 'ZIP code', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
+        );
+        $value = wp_parse_args( $value, $defaults);
+        /**
+         * Content
+         */
+        $content = '';
+        foreach( array_keys( $defaults ) as $key ) {
+            $content .= sprintf( '<div class="iworks-options-%s">', esc_attr( $key ) );
+            $content .= '<label>';
+            $content .= $i18n[ $key ];
+            $content .= '<br />';
+			$content .= $this->input(
+				sprintf( '%s[%s]', $name, esc_attr( $key ) ),
+				$value[$key],
+            );
+            $content .= '</div>';
+        }
         return $content;
     }
 
