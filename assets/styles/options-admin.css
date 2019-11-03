@@ -1,11 +1,11 @@
 .iworks-options #hasadmintabs,
 .iworks-options #hasadmintabs .ui-widget-header {
-    border: 0;
-    background: transparent none;
+	border: 0;
+	background: transparent none;
 }
 .iworks-options #hasadmintabs .ui-widget-header {
-    border-bottom: 1px solid #c5c5c5;
+	border-bottom: 1px solid #c5c5c5;
 }
 .iworks-options #hasadmintabs .form-table td {
-    padding: 10px;
+	padding: 10px;
 }
