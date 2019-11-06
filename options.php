@@ -1612,6 +1612,9 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 			$content .= $this->input(
 				sprintf( '%s[%s]', $name, esc_attr( $key ) ),
 				$value[ $key ],
+				array(
+					'class' => 'large-text iworks-options-text',
+				)
 			);
 			$content .= '</div>';
 		}
