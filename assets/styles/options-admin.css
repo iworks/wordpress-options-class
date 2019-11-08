@@ -9,3 +9,6 @@
 .iworks-options #hasadmintabs .form-table td {
 	padding: 10px;
 }
+.iworks-options-row .select2 {
+	min-width: 200px;
+}
