@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.6.7
+Version: 2.6.8
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -56,7 +56,7 @@ class iworks_options {
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '2.6.6';
+		$this->version              = '2.6.8';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -477,7 +477,7 @@ class iworks_options {
 						$html_element_name,
 						$html_element_name,
 						$html_element_name,
-						$related_to[ $option_name ] ? ' checked="checked"' : '',
+						checked( $related_to[ $option_name ], true, false ),
 						( ( isset( $option['disabled'] ) && $option['disabled'] ) or ( isset( $option['need_pro'] ) && $option['need_pro'] ) ) ? ' disabled="disabled"' : '',
 						esc_attr( implode( ' ', $classes ) ),
 						isset( $option['label'] ) ? $option['label'] : ''
@@ -508,7 +508,7 @@ class iworks_options {
 							$html_element_name,
 							$value,
 							$value,
-							$checked ? ' checked="checked"' : '',
+							checked( $checked, true, false ),
 							$id,
 							$label
 						);
@@ -548,6 +548,7 @@ class iworks_options {
 									$disabled = 'disabled="disabled"';
 								}
 								$classes[] = sanitize_title( $value );
+								$checked   = $option_value == $value or ( empty( $option_value ) and isset( $option['default'] ) and $value == $option['default'] );
 								$radio    .= sprintf(
 									'<li class="%s%s"><label for="%s"><input type="radio" name="%s" value="%s"%s id="%s" %s/> %s</label>',
 									esc_attr( implode( ' ', $classes ) ),
@@ -555,7 +556,7 @@ class iworks_options {
 									esc_attr( $id ),
 									esc_attr( $html_element_name ),
 									esc_attr( $value ),
-									( $option_value == $value or ( empty( $option_value ) and isset( $option['default'] ) and $value == $option['default'] ) ) ? ' checked="checked"' : '',
+									checked( $checked, true, false ),
 									esc_attr( $id ),
 									$disabled,
 									esc_html( $input['label'] )

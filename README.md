@@ -6,7 +6,10 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
-##### 2.6.7 (2019-xx-xx)
+##### 2.6.8 (2019-11-07)
+* Implemented `checked()` function.
+
+##### 2.6.7 (2019-11-07)
 * Implemented WordPress PSR.
 * Added options to money field.
 * Added few checks to avoid wrong key warning.
