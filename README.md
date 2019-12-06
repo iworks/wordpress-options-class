@@ -11,6 +11,8 @@ Changelog
 * Added options to money field.
 * Added few checks to avoid wrong key warning.
 * Added field type "location".
+* Fixed remove default value from database.
+* Added `flush_rewrite_rules` to configuration.
 
 ##### 2.6.6 (2018-09-24)
 * Added CSS for tabs.

@@ -835,10 +835,25 @@ class iworks_options {
 			/**
 			 * register setting
 			 */
+
+			$args = array();
+			if ( isset( $option['sanitize_callback'] ) ) {
+				$args['sanitize_callback'] = $option['sanitize_callback'];
+			}
+			if ( isset( $option['description'] ) ) {
+				$args['description'] = $option['description'];
+			}
+			if ( isset( $option['flush_rewrite_rules'] ) ) {
+				$action = sprintf( 'update_option_%s%s', $this->option_prefix, $option['name'] );
+				add_action( $action, array( $this, 'flush_rewrite_rules' ) );
+			}
+			/**
+			 * register
+			 */
 			register_setting(
 				$this->option_prefix . $option_group,
 				$this->option_prefix . $option['name'],
-				isset( $option['sanitize_callback'] ) ? $option['sanitize_callback'] : array( $this, 'sanitize_callback' )
+				$args
 			);
 		}
 	}
@@ -1042,7 +1057,7 @@ class iworks_options {
 		 * delete if option have a default value
 		 */
 		$default_value = $this->get_default_value( $this->option_prefix . $option_name );
-		if ( $option_name === $default_value ) {
+		if ( $option_value === $default_value ) {
 			delete_option( $this->option_prefix . $option_name );
 			return;
 		}
@@ -1621,10 +1636,6 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 		return $content;
 	}
 
-	public function sanitize_callback( $value ) {
-		return $value;
-	}
-
 	public function admin_head() {
 		$screen = get_current_screen();
 		if ( ! in_array( $screen->id, $this->pagehooks ) ) {
@@ -1764,5 +1775,14 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 	 */
 	public function get_pagehook() {
 		return $this->option_prefix . $this->option_group;
+	}
+
+	/**
+	 * Flush rewrite roles when it is configured
+	 *
+	 * @since 2.6.7
+	 */
+	public function flush_rewrite_rules() {
+		flush_rewrite_rules();
 	}
 }
