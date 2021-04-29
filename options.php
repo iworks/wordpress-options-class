@@ -3,13 +3,13 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.6.8
+Version: 2.6.9
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Copyright 2011-2019 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2011-2021 Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -56,7 +56,7 @@ class iworks_options {
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '2.6.8';
+		$this->version              = '2.6.9';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -741,6 +741,19 @@ class iworks_options {
 							$html_element_name
 						);
 					}
+					break;
+				case 'button':
+					if ( isset( $option['description'] ) && $option['description'] ) {
+						printf( '<p class="description">%s</p>', $option['description'] );
+					}
+					$classes[] = 'button';
+					$content  .= sprintf(
+						'<input type="button" name="%s" value="%s" class="%s" data-nonce="%s" />',
+						$html_element_name,
+						$option['value'],
+						implode( ' ', $classes ),
+						wp_create_nonce( $html_element_name )
+					);
 					break;
 				default:
 					$content .= sprintf( 'not implemented type: %s', $option['type'] );

@@ -6,9 +6,10 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
-##### 2.6.9 (2019-xx-xx)
+##### 2.6.9 (2021-04-29)
 * Fixed remove default value from database.
 * Added `flush_rewrite_rules` to configuration.
+* Added field type `button`.
 
 ##### 2.6.8 (2019-11-07)
 * Implemented `checked()` function.
@@ -17,7 +18,7 @@ Changelog
 * Implemented WordPress PSR.
 * Added options to money field.
 * Added few checks to avoid wrong key warning.
-* Added field type "location".
+* Added field type `location`.
 
 ##### 2.6.6 (2018-09-24)
 * Added CSS for tabs.
@@ -32,9 +33,9 @@ Changelog
 
 ##### 2.6.4 (2017-12-22)
 
-* Added ability to produce "hidden" name, prefixed by underscore.
+* Added ability to produce `hidden` name, prefixed by underscore.
 * Fixed prolblem with warning. Props for [Michał](https://wordpress.org/support/users/lupinek/)
-* Handle "checkbox", and "switch_button" fields.
+* Handle `checkbox`, and `switch_button` fields.
 * Improved submenu building.
 
 ##### 2.6.3 (2017-10-09)
