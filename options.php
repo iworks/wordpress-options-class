@@ -742,6 +742,11 @@ class iworks_options {
 						);
 					}
 					break;
+					/**
+					 * handle `button` field type
+					 *
+					 * @since 2.6.9
+					 */
 				case 'button':
 					if ( isset( $option['description'] ) && $option['description'] ) {
 						printf( '<p class="description">%s</p>', $option['description'] );
