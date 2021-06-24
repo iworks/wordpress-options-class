@@ -6,6 +6,11 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.7.0 (2021-06-24)
+* Updated jQuery-UI.
+* Shorted ui-slide select to max 150px.
+* Added missing icons for datepicker.
+
 ##### 2.6.9 (2021-04-29)
 * Fixed remove default value from database.
 * Added `flush_rewrite_rules` to configuration.
