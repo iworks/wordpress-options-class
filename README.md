@@ -6,6 +6,9 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.7.1 (2021-08-16)
+* Added check for assets enqueue to avoid unnecessary loads.
+
 ##### 2.7.0 (2021-06-24)
 * Updated jQuery-UI.
 * Shorted ui-slide select to max 150px.

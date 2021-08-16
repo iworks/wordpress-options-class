@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.7.0
+Version: 2.7.1
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -56,7 +56,7 @@ class iworks_options {
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '2.7.0';
+		$this->version              = '2.7.1';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -1656,8 +1656,7 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 	}
 
 	public function admin_head() {
-		$screen = get_current_screen();
-		if ( ! in_array( $screen->id, $this->pagehooks ) ) {
+		if ( false === $this->check_hooks_to_load_asses() ) {
 			return;
 		}
 		$files = $this->get_files();
@@ -1694,6 +1693,9 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 	}
 
 	public function register_styles() {
+		if ( false === $this->check_hooks_to_load_asses() ) {
+			return;
+		}
 		$files = $this->get_files();
 		foreach ( $files as $data ) {
 			$file = sprintf( 'assets/%s/%s', $data['style'] ? 'styles' : 'scripts', $data['file'] );
@@ -1803,5 +1805,23 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 	 */
 	public function flush_rewrite_rules() {
 		flush_rewrite_rules();
+	}
+
+	/**
+	 * check to register or load assets
+	 *
+	 * check to register or load assets to avoid loading when it is not needed
+	 *
+	 * @since 2.8.0
+	 */
+	private function check_hooks_to_load_asses() {
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return false;
+		}
+		$screen = get_current_screen();
+		if ( ! is_object( $screen ) ) {
+			return false;
+		}
+		return in_array( $screen->id, $this->pagehooks );
 	}
 }
