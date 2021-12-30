@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.7.1
+Version: 2.7.2
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -56,7 +56,7 @@ class iworks_options {
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '2.7.1';
+		$this->version              = '2.7.2';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -854,7 +854,6 @@ class iworks_options {
 			/**
 			 * register setting
 			 */
-
 			$args = array();
 			if ( isset( $option['sanitize_callback'] ) ) {
 				$args['sanitize_callback'] = $option['sanitize_callback'];
@@ -878,10 +877,7 @@ class iworks_options {
 	}
 
 	public function options_init() {
-		$options = array();
-		if ( is_callable( $this->option_function_name ) ) {
-			$options = call_user_func( $this->option_function_name );
-		}
+		$options = $this->get_option_array();
 		/**
 		 * add last_used_tab field
 		 */
@@ -1253,7 +1249,6 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 		wp_enqueue_script( 'common' );
 		wp_enqueue_script( 'wp-lists' );
 		wp_enqueue_script( 'postbox' );
-
 		foreach ( $this->options[ $option_name ]['metaboxes'] as $id => $data ) {
 			add_meta_box(
 				$id,

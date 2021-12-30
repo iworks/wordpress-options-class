@@ -6,6 +6,9 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.7.2 (2021-12-30)
+* Unify data get - it missed dynamic added options.
+
 ##### 2.7.1 (2021-08-16)
 * Added check for assets enqueue to avoid unnecessary loads.
 
