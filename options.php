@@ -3,13 +3,13 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.7.2
+Version: 2.7.3
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Copyright 2011-2021 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2011-2022 Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -51,12 +51,26 @@ class iworks_options {
 
 	public $notices;
 
+	/**
+	 * self file
+	 *
+	 * @since 2.7.3
+	 */
+	private $__file__ = __FILE__;
+
+	/**
+	 * call from plugin
+	 *
+	 * @since 2.7.3
+	 */
+	private $plugin = '-not-set-';
+
 	public function __construct() {
 		/**
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '2.7.2';
+		$this->version              = '2.7.3';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -461,12 +475,13 @@ class iworks_options {
 						$id = sprintf( ' id="%s"', $html_element_name );
 					}
 					$content .= sprintf(
-						'<input type="%s" name="%s" value="%s" class="%s"%s /> %s',
+						'<input type="%s" name="%s" value="%s" class="%s"%s%s /> %s',
 						$option['type'],
 						$html_element_name,
 						$this->get_option( $option_name, $option_group ),
 						esc_attr( implode( ' ', $classes ) ),
 						$id,
+						isset( $option['maxlength'] ) ? sprintf( ' maxlength="%d"', $option['maxlength'] ) : '',
 						isset( $option['label'] ) ? $option['label'] : ''
 					);
 					break;
@@ -768,7 +783,7 @@ class iworks_options {
 					if ( isset( $option['label'] ) && $option['label'] ) {
 						$content .= '<br />';
 					}
-					$content .= sprintf( '<span class="description">%s</span>', $option['description'] );
+					$content .= sprintf( '<p class="description">%s</p>', $option['description'] );
 				}
 				$content .= '</td>';
 				$content .= '</tr>';
@@ -902,7 +917,11 @@ class iworks_options {
 			if ( isset( $data['options'] ) && is_array( $data['options'] ) ) {
 				$this->register_setting( $data['options'], $key );
 			} elseif ( 'options' == $key ) {
-				$this->register_setting( $data, 'theme' );
+				$key = $this->mode;
+				if ( ! empty( $this->option_group ) ) {
+					$key = $this->option_group;
+				}
+				$this->register_setting( $data, $key );
 			}
 		}
 	}
@@ -1818,5 +1837,16 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 			return false;
 		}
 		return in_array( $screen->id, $this->pagehooks );
+	}
+
+	/**
+	 * Set plugin value
+	 *
+	 * @since 2.7.3
+	 *
+	 * @param string $plugin  Plugin file.
+	 */
+	public function set_plugin( $plugin ) {
+		$this->plugin = $plugin;
 	}
 }

@@ -6,6 +6,12 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+
+##### 2.7.3 (2022-01-18)
+* Added maxlenght param to text field.
+* Fixed data get for older plugins.
+* Added two debug values to better debuging.
+
 ##### 2.7.2 (2021-12-30)
 * Unify data get - it missed dynamic added options.
 
