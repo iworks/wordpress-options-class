@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.7.3
+Version: 2.8.0
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -70,7 +70,7 @@ class iworks_options {
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '2.7.3';
+		$this->version              = '2.8.0';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -727,35 +727,37 @@ class iworks_options {
 					);
 					break;
 				case 'image':
-					if ( isset( $option['description'] ) && $option['description'] ) {
-						printf( '<p class="description">%s</p>', $option['description'] );
+					if ( is_admin() ) {
+						wp_enqueue_media();
 					}
-					$value    = $this->get_option( $option_name, $option_group );
+					$src = $value    = $this->get_option( $option_name, $option_group );
+					if ( preg_match( '/^\d+/', $value ) && 0 < intval( $value ) ) {
+						$src = wp_get_attachment_url( $value );
+					}
 					$content .= sprintf(
 						'<img id="%s_img" src="%s" alt="" style="%s%sclear:right;display:block;margin-bottom:10px;" />',
 						$html_element_name,
-						$value ? $value : '',
+						$src ? $src : '',
 						array_key_exists( 'max-width', $option ) && is_integer( $option['max-width'] ) ? sprintf( 'max-width: %dpx;', $option['max-width'] ) : '',
 						array_key_exists( 'max-height', $option ) && is_integer( $option['max-height'] ) ? sprintf( 'max-height: %dpx;', $option['max-height'] ) : ''
 					);
 					$content .= sprintf(
-						'<input type="hidden" name="%s" id="%s" value="%s" />',
-						$this->get_option( $option_name, $option_group ),
+						'<input type="hidden" name="%s" value="%s" />',
+						$html_element_name,
 						$this->get_option( $option_name, $option_group ),
 						$value
 					);
 					$content .= sprintf(
 						' <input type="button" class="button iworks_upload_button" value="%s" rel="#%s" />',
-						__( 'Upload image', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
+						__( 'Select Image', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
 						$html_element_name
 					);
-					if ( ! empty( $value ) || ( array_key_exists( 'default', $option ) && $value != $option['default'] ) ) {
-						$content .= sprintf(
-							' <input type="submit" class="button iworks_delete_button" value="%s" rel="#%s%s" />',
-							__( 'Delete image', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
-							$html_element_name
-						);
-					}
+					$content .= sprintf(
+						' <input type="button" class="button iworks_delete_button" value="%s" rel="#%s" %s/>',
+						__( 'Delete image', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
+						$html_element_name,
+						empty( $value ) ? ' style="display:none"' : ''
+					);
 					break;
 					/**
 					 * handle `button` field type
@@ -1743,9 +1745,14 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 				'file'   => 'jquery-ui.min.css',
 			),
 			array(
-				'handle' => __CLASS__,
-				'file'   => 'common.js',
-				'deps'   => array( 'jquery', 'switch_button', 'jquery-ui-tabs' ),
+				'handle'             => __CLASS__,
+				'file'               => 'common.js',
+				'deps'               => array( 'jquery', 'switch_button', 'jquery-ui-tabs' ),
+				'wp_localize_script' => array(
+					'buttons' => array(
+						'select_media' => __( 'Select Image', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
+					),
+				),
 			),
 			/**
 			 * switch checkbox

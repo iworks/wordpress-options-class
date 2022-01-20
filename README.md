@@ -6,6 +6,8 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.8.0 (2022-01-21)
+* Update `image` field to new WP Media API.
 
 ##### 2.7.3 (2022-01-18)
 * Added maxlenght param to text field.
