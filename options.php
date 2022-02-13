@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.8.0
+Version: 2.8.1
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -70,7 +70,7 @@ class iworks_options {
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '2.8.0';
+		$this->version              = '2.8.1';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -475,13 +475,15 @@ class iworks_options {
 						$id = sprintf( ' id="%s"', $html_element_name );
 					}
 					$content .= sprintf(
-						'<input type="%s" name="%s" value="%s" class="%s"%s%s /> %s',
+						'<input type="%s" name="%s" value="%s" class="%s"%s%s%s%s /> %s',
 						$option['type'],
 						$html_element_name,
 						$this->get_option( $option_name, $option_group ),
 						esc_attr( implode( ' ', $classes ) ),
 						$id,
 						isset( $option['maxlength'] ) ? sprintf( ' maxlength="%d"', $option['maxlength'] ) : '',
+						isset( $option['placeholder'] ) ? sprintf( ' placeholder="%d"', $option['placeholder'] ) : '',
+						isset( $option['aria-label'] ) ? sprintf( ' aria-label="%d"', $option['aria-label'] ) : '',
 						isset( $option['label'] ) ? $option['label'] : ''
 					);
 					break;
