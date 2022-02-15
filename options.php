@@ -400,7 +400,7 @@ class iworks_options {
 					}
 					if ( $options['add_table'] ) {
 						$content .= sprintf(
-							'<table class="form-table%s" style="%s">',
+							'<table class="form-table%s" style="%s" role="presentation">',
 							isset( $options['widefat'] ) ? ' widefat' : '',
 							isset( $options['style'] ) ? $options['style'] : ''
 						);
@@ -482,8 +482,8 @@ class iworks_options {
 						esc_attr( implode( ' ', $classes ) ),
 						$id,
 						isset( $option['maxlength'] ) ? sprintf( ' maxlength="%d"', $option['maxlength'] ) : '',
-						isset( $option['placeholder'] ) ? sprintf( ' placeholder="%d"', $option['placeholder'] ) : '',
-						isset( $option['aria-label'] ) ? sprintf( ' aria-label="%d"', $option['aria-label'] ) : '',
+						isset( $option['placeholder'] ) ? sprintf( ' placeholder="%s"', esc_attr( $option['placeholder'] ) ) : '',
+						isset( $option['aria-label'] ) ? sprintf( ' aria-label="%s"', esc_attr( $option['aria-label'] ) ) : '',
 						isset( $option['label'] ) ? $option['label'] : ''
 					);
 					break;
@@ -703,7 +703,7 @@ class iworks_options {
 					}
 					break;
 				case 'subheading':
-					$content .= sprintf( '<h4 class="title">%s</h4>', $option['label'] );
+					$content .= sprintf( '<h2 class="title">%s</h2>', $option['label'] );
 					break;
 				case 'wpColorPicker':
 					if ( is_admin() ) {
@@ -782,9 +782,9 @@ class iworks_options {
 				default:
 					$content .= sprintf( 'not implemented type: %s', $option['type'] );
 			}
-			if ( $option['type'] != 'hidden' ) {
+			if ( 'hidden' !== $option['type'] ) {
 				if ( isset( $option['description'] ) && $option['description'] ) {
-					if ( isset( $option['label'] ) && $option['label'] ) {
+					if ( isset( $option['label'] ) && $option['label'] && 'subheading' !== $option['type'] ) {
 						$content .= '<br />';
 					}
 					$content .= sprintf( '<p class="description">%s</p>', $option['description'] );
@@ -815,7 +815,7 @@ class iworks_options {
 				$content  = $top . $content;
 			} else {
 				if ( $options['add_table'] ) {
-					$top .= sprintf( '<table class="form-table%s" style="%s">', isset( $options['widefat'] ) ? ' widefat' : '', isset( $options['style'] ) ? $options['style'] : '' );
+					$top .= sprintf( '<table class="form-table%s" style="%s" role="presentation">', isset( $options['widefat'] ) ? ' widefat' : '', isset( $options['style'] ) ? $options['style'] : '' );
 					if ( isset( $options['thead'] ) ) {
 						$top .= sprintf( '<thead><tr class="%s">', implode( ' ', $tr_classes ) );
 						foreach ( $options['thead'] as $text => $colspan ) {
@@ -1201,7 +1201,7 @@ class iworks_options {
 		<?php wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false ); ?>
 		<?php wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false ); ?>
 		<input type="hidden" name="action" value="save_howto_metaboxes_general" />
-		<div id="poststuff" class="metabox-holder<?php echo empty( $screen_layout_columns ) || 2 == $screen_layout_columns ? ' has-right-sidebar' : ''; ?>">
+		<div class="metabox-holder<?php echo empty( $screen_layout_columns ) || 2 == $screen_layout_columns ? ' has-right-sidebar' : ''; ?>">
 		<?php
 		/**
 		 * check metaboxes for key

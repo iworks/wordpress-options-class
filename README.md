@@ -9,6 +9,7 @@ Changelog
 ##### 2.8.1 (2022-02-13)
 * Added `placeholder` into few fields.
 * Added `aria-label` into few fields.
+* Refreshed used WP classes.
 
 ##### 2.8.0 (2022-01-21)
 * Update `image` field to new WP Media API.
