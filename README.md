@@ -6,6 +6,9 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.8.2 (2022-xx-xx)
+* Fixed `last_used_tab`.
+
 ##### 2.8.1 (2022-02-13)
 * Added `placeholder` into few fields.
 * Added `aria-label` into few fields.

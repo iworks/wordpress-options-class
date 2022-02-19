@@ -898,17 +898,13 @@ class iworks_options {
 	public function options_init() {
 		$options = $this->get_option_array();
 		/**
-		 * add last_used_tab field
+		 * register_setting last_used_tab field
 		 */
-		foreach ( $options as $key => $data ) {
-			if ( isset( $options[ $key ]['use_tabs'] ) && $options[ $key ]['use_tabs'] ) {
-				$field = array(
-					'type' => 'hidden',
-					'name' => 'last_used_tab',
-					'id'   => 'last_used_tab',
-				);
-				array_unshift( $options[ $key ]['options'], $field );
-			}
+		if ( isset( $options['use_tabs'] ) && $options['use_tabs'] ) {
+			register_setting(
+				$this->option_prefix . 'index',
+				$this->option_prefix . 'last_used_tab',
+			);
 		}
 		/**
 		 * filter it
@@ -1688,7 +1684,7 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 	}
 
 	/**
-	 * Cnvert color to rgb
+	 * Convert color to rgb
 	 *
 	 * @since 2.4.1
 	 *
