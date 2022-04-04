@@ -107,6 +107,8 @@ function iworks_options_tabulator_init() {
             caption = jQuery(this).find('h3').text();
             if (rel) {
                 rel = ' class="' + rel + '"';
+            } else {
+                rel = '';
             }
             jQuery('#hasadmintabs > ul').append('<li><a href="#' + id + '"><span' + rel + '>' + caption + "<\/span><\/a><\/li>");
             jQuery(this).find('h3').hide();

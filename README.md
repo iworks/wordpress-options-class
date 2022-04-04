@@ -6,8 +6,10 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
-##### 2.8.2 (2022-xx-xx)
+##### 2.8.2 (2022-04-04)
 * Fixed `last_used_tab`.
+* Fixed `udefined` content in tabs.
+* Improved admin responsibility. Props for [tanohex](https://wordpress.org/support/users/tanohex/).
 
 ##### 2.8.1 (2022-02-13)
 * Added `placeholder` into few fields.

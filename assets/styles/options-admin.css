@@ -9,6 +9,15 @@
 .iworks-options #hasadmintabs .form-table td {
     padding: 10px;
 }
+
+@media screen and ( max-width: 425px ) {
+    .iworks-options #hasadmintabs .ui-widget-header a,
+    .iworks-options #hasadmintabs .ui-widget-header li {
+        display: block;
+        float: none;
+    }
+}
+
 .iworks-options-row .select2-container {
     width: 100%;
     min-width: 300px;
@@ -17,3 +26,24 @@
     margin-top: 10px;
     max-width: 150px;
 }
+
+@media screen and ( max-width: 768px ) {
+    .iworks_options .has-right-sidebar {
+        display: grid;
+        grid-template-areas: "iworks-options" "iworks-sidebar";
+    }
+    .iworks_options #side-info-column {
+        grid-area: iworks-sidebar;
+        width: 100%;
+    }
+    .iworks_options #post-body {
+        grid-area: iworks-options;
+        float: none;
+    }
+    .iworks_options .has-right-sidebar #side-sortables,
+    .iworks_options .has-right-sidebar #post-body-content {
+        width: 100%;
+        min-height: 0;
+    }
+}
+
