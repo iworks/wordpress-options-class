@@ -903,7 +903,7 @@ class iworks_options {
 		if ( isset( $options['use_tabs'] ) && $options['use_tabs'] ) {
 			register_setting(
 				$this->option_prefix . 'index',
-				$this->option_prefix . 'last_used_tab',
+				$this->option_prefix . 'last_used_tab'
 			);
 		}
 		/**
