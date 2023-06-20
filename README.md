@@ -6,10 +6,13 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
-Y#### 2.8.4 (2022-04-04)
+##### 2.8.5 (2022-06-20)
+* The creation of dunamic property has been removed. It causes a warning in PHP 8.2. Props for [waveman777](https://wordpress.org/support/users/waveman777/).
+
+##### 2.8.4 (2022-04-04)
 * Fixed PHP < 8 error.
 
-Y#### 2.8.3 (2022-04-04)
+##### 2.8.3 (2022-04-04)
 * Fixed `last_used_tab`.
 * Fixed `udefined` content in tabs.
 * Improved admin responsibility. Props for [tanohex](https://wordpress.org/support/users/tanohex/).

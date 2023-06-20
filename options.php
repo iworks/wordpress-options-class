@@ -3,13 +3,13 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.8.3
+Version: 2.8.5
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Copyright 2011-2022 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2011-2023 Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -65,12 +65,19 @@ class iworks_options {
 	 */
 	private $plugin = '-not-set-';
 
+	/**
+	 * Files to enqueue
+	 *
+	 * @since 2.8.4
+	 */
+	private $files = array();
+
 	public function __construct() {
 		/**
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '2.8.3';
+		$this->version              = '2.8.5';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
