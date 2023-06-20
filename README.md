@@ -7,7 +7,7 @@ Changelog
 ---------
 
 ##### 2.8.5 (2022-06-20)
-* The creation of dunamic property has been removed. It causes a warning in PHP 8.2. Props for [waveman777](https://wordpress.org/support/users/waveman777/).
+* The creation of dynamic property has been removed. It causes a warning in PHP 8.2. Props for [waveman777](https://wordpress.org/support/users/waveman777/).
 * Select2 images has been optimized.
 
 ##### 2.8.4 (2022-04-04)
