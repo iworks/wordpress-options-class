@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.8.5
+Version: 2.8.6
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -26,9 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
  */
 
-if ( ! defined( 'WPINC' ) ) {
-	die;
-}
+defined( 'ABSPATH' ) || exit; // Exit if accessed directly
 
 if ( class_exists( 'iworks_options' ) ) {
 	return;
@@ -77,7 +75,7 @@ class iworks_options {
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '2.8.5';
+		$this->version              = '2.8.6';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -255,7 +253,9 @@ class iworks_options {
 		 * check options exists?
 		 */
 		if ( ! is_array( $options['options'] ) ) {
-			echo '<div class="below-h2 error"><p><strong>' . __( 'An error occurred while getting the configuration.', 'IWORKS_OPTIONS_TEXTDOMAIN' ) . '</strong></p></div>';
+			echo '<div class="below-h2 error"><p><strong>';
+			esc_html_e( 'An error occurred while getting the configuration.', 'IWORKS_OPTIONS_TEXTDOMAIN' );
+			echo '</strong></p></div>';
 			return;
 		}
 		/**
@@ -284,7 +284,7 @@ class iworks_options {
 		if ( $use_tabs ) {
 			$top .= sprintf(
 				'<div id="hasadmintabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all" data-prefix="%s">',
-				$this->option_prefix
+				esc_attr( $this->option_prefix )
 			);
 		}
 		$i             = 0;
@@ -377,9 +377,9 @@ class iworks_options {
 					$html_element_name = $option_name ? $this->option_prefix . $option_name : '';
 					$content          .= sprintf(
 						'<input type="hidden" name="%s" value="%s" /> %s',
-						$html_element_name,
-						$this->get_option( $option_name, $option_group ),
-						"\n"
+						esc_attr( $html_element_name ),
+						esc_attr( $this->get_option( $option_name, $option_group ) ),
+						PHP_EOL
 					);
 				}
 				continue;
@@ -399,22 +399,25 @@ class iworks_options {
 					}
 					$content .= sprintf(
 						'<fieldset id="iworks_%s" class="ui-tabs-panel ui-widget-content ui-corner-bottom"%s>',
-						crc32( $option['label'] ),
-						( isset( $option['class'] ) && $option['class'] ) ? ' rel="' . $option['class'] . '"' : ''
+						esc_attr( crc32( $option['label'] ) ),
+						sprintf(
+							( isset( $option['class'] ) && $option['class'] ) ? ' rel="%s"' : '',
+							esc_attr( $option['class'] )
+						)
 					);
 					if ( ! $use_tabs ) {
-						$content .= sprintf( '<h3>%s</h3>', $option['label'] );
+						$content .= sprintf( '<h3>%s</h3>', esc_html( $option['label'] ) );
 					}
 					if ( $options['add_table'] ) {
 						$content .= sprintf(
 							'<table class="form-table%s" style="%s" role="presentation">',
-							isset( $options['widefat'] ) ? ' widefat' : '',
-							isset( $options['style'] ) ? $options['style'] : ''
+							esc_attr( isset( $options['widefat'] ) ? ' widefat' : '' ),
+							esc_attr( isset( $options['style'] ) ? $options['style'] : '' )
 						);
 						$content .= '<tbody>';
 					}
 				}
-				$content .= sprintf( '<tr class="%s"><td colspan="2">', implode( ' ', $tr_classes ) );
+				$content .= sprintf( '<tr class="%s"><td colspan="2">', esc_attr( implode( ' ', $tr_classes ) ) );
 			} elseif ( 'subheading' == $option['type'] ) {
 				$content .= '<tr><td colspan="2">';
 			} elseif ( 'hidden' != $option['type'] ) {
@@ -424,11 +427,11 @@ class iworks_options {
 				$content .= sprintf(
 					'<tr valign="top" id="tr_%s" class="%s">',
 					esc_attr( $option_name ? $option_name : '' ),
-					implode( ' ', $tr_classes )
+					esc_attr( implode( ' ', $tr_classes ) )
 				);
 				$content .= sprintf(
 					'<th scope="row">%s%s</th>',
-					isset( $option['dashicon'] ) && $option['dashicon'] ? sprintf( '<span class="dashicons dashicons-%s"></span>&nbsp;', $option['dashicon'] ) : '',
+					isset( $option['dashicon'] ) && $option['dashicon'] ? sprintf( '<span class="dashicons dashicons-%s"></span>&nbsp;', esc_attr( $option['dashicon'] ) ) : '',
 					isset( $option['th'] ) && $option['th'] ? $option['th'] : '&nbsp;'
 				);
 				$content .= '<td>';
@@ -465,12 +468,12 @@ class iworks_options {
 					}
 					$content .= sprintf(
 						'<input type="%s" name="%s" value="%s" class="%s" %s /> %s',
-						$option['type'],
-						$html_element_name,
-						$this->get_option( $option_name, $option_group ),
+						esc_attr( $option['type'] ),
+						esc_attr( $html_element_name ),
+						esc_attr( $this->get_option( $option_name, $option_group ) ),
 						esc_attr( implode( ' ', $classes ) ),
 						$this->build_field_attributes( $args ),
-						isset( $option['label'] ) ? $option['label'] : ''
+						esc_html( isset( $option['label'] ) ? $option['label'] : '' )
 					);
 					break;
 				case 'email':
@@ -483,11 +486,11 @@ class iworks_options {
 					}
 					$content .= sprintf(
 						'<input type="%s" name="%s" value="%s" class="%s"%s%s%s%s /> %s',
-						$option['type'],
-						$html_element_name,
-						$this->get_option( $option_name, $option_group ),
+						esc_attr( $option['type'] ),
+						esc_attr( $html_element_name ),
+						esc_attr( $this->get_option( $option_name, $option_group ) ),
 						esc_attr( implode( ' ', $classes ) ),
-						$id,
+						esc_attr( $id ),
 						isset( $option['maxlength'] ) ? sprintf( ' maxlength="%d"', $option['maxlength'] ) : '',
 						isset( $option['placeholder'] ) ? sprintf( ' placeholder="%s"', esc_attr( $option['placeholder'] ) ) : '',
 						isset( $option['aria-label'] ) ? sprintf( ' aria-label="%s"', esc_attr( $option['aria-label'] ) ) : '',
@@ -498,13 +501,13 @@ class iworks_options {
 					$related_to[ $option_name ] = $this->get_option( $option_name, $option_group );
 					$checkbox                   = sprintf(
 						'<label for="%s"><input type="checkbox" name="%s" id="%s" value="1"%s%s class="%s" /> %s</label>',
-						$html_element_name,
-						$html_element_name,
-						$html_element_name,
+						esc_attr( $html_element_name ),
+						esc_attr( $html_element_name ),
+						esc_attr( $html_element_name ),
 						checked( $related_to[ $option_name ], true, false ),
 						( ( isset( $option['disabled'] ) && $option['disabled'] ) or ( isset( $option['need_pro'] ) && $option['need_pro'] ) ) ? ' disabled="disabled"' : '',
 						esc_attr( implode( ' ', $classes ) ),
-						isset( $option['label'] ) ? $option['label'] : ''
+						esc_html( isset( $option['label'] ) ? $option['label'] : '' )
 					);
 					$content                   .= apply_filters( $filter_name, $checkbox );
 					break;
@@ -528,13 +531,13 @@ class iworks_options {
 						$id       = sprintf( '%s%d', $option_name, $i++ );
 						$content .= sprintf(
 							'<li><label for="%s"><input type="checkbox" name="%s[%s]" value="%s"%s id="%s"/> %s</label></li>',
-							$id,
-							$html_element_name,
-							$value,
-							$value,
+							esc_attr( $id ),
+							esc_attr( $html_element_name ),
+							esc_attr( $value ),
+							esc_attr( $value ),
 							checked( $checked, true, false ),
-							$id,
-							$label
+							esc_attr( $id ),
+							esc_html( $label )
 						);
 					}
 					$content .= '</ul>';
@@ -554,7 +557,7 @@ class iworks_options {
 					if ( empty( $radio_options ) ) {
 						$content .= sprintf(
 							'<p>Error: no <strong>radio</strong> array key for option: <em>%s</em>.</p>',
-							$option_name
+							esc_html( $option_name )
 						);
 					} else {
 						/**
@@ -576,7 +579,7 @@ class iworks_options {
 								$radio    .= sprintf(
 									'<li class="%s%s"><label for="%s"><input type="radio" name="%s" value="%s"%s id="%s" %s/> %s</label>',
 									esc_attr( implode( ' ', $classes ) ),
-									$disabled ? ' disabled' : '',
+									esc_attr( $disabled ? ' disabled' : '' ),
 									esc_attr( $id ),
 									esc_attr( $html_element_name ),
 									esc_attr( $value ),
@@ -588,7 +591,7 @@ class iworks_options {
 								if ( isset( $input['description'] ) ) {
 									$radio .= sprintf(
 										'<br /><span class="description">%s</span>',
-										$input['description']
+										esc_html( $input['description'] )
 									);
 								}
 								$radio .= '</li>';
@@ -601,7 +604,7 @@ class iworks_options {
 							if ( empty( $radio ) ) {
 								$content .= sprintf(
 									'<p>Error: no <strong>radio</strong> array key for option: <em>%s</em>.</p>',
-									$option_name
+									esc_html( $option_name )
 								);
 							}
 						}
@@ -651,10 +654,10 @@ class iworks_options {
 							$select .= sprintf(
 								'<option %s value="%s" %s %s >%s</option>',
 								$disabled ? 'class="disabled"' : '',
-								$key,
+								esc_attr( $key ),
 								selected( $selected, true, false ),
 								$disabled,
-								$value
+								esc_html( $value )
 							);
 						}
 						if ( $select ) {
@@ -665,7 +668,7 @@ class iworks_options {
 								esc_attr( $name_sufix ),
 								esc_attr( implode( ' ', $classes ) ),
 								$extra,
-								$select
+								esc_html( $select )
 							);
 						}
 					}
@@ -690,7 +693,7 @@ class iworks_options {
 							'<h3 id="options-%s"%s>%s</h3>',
 							sanitize_title_with_dashes( remove_accents( $option['label'] ) ),
 							count( $classes ) ? ' class="' . implode( ' ', $classes ) . '"' : '',
-							$option['label']
+							esc_html( $option['label'] )
 						);
 						$label_index++;
 						$i = 0;
@@ -710,7 +713,7 @@ class iworks_options {
 					}
 					break;
 				case 'subheading':
-					$content .= sprintf( '<h2 class="title">%s</h2>', $option['label'] );
+					$content .= sprintf( '<h2 class="title">%s</h2>', esc_html( $option['label'] ) );
 					break;
 				case 'wpColorPicker':
 					if ( is_admin() ) {
@@ -719,19 +722,19 @@ class iworks_options {
 					}
 					$id = '';
 					if ( isset( $option['use_name_as_id'] ) && $option['use_name_as_id'] ) {
-						$id = sprintf( ' id="%s"', $html_element_name );
+						$id = sprintf( ' id="%s"', esc_attr( $html_element_name ) );
 					}
 					$content .= apply_filters(
 						$filter_name,
 						sprintf(
 							'<input type="text" name="%s" value="%s" class="wpColorPicker %s"%s%s /> %s',
-							$html_element_name,
-							$this->get_option( $option_name, $option_group ),
-							isset( $option['class'] ) && $option['class'] ? $option['class'] : '',
-							$id,
+							esc_attr( $html_element_name ),
+							esc_attr( $this->get_option( $option_name, $option_group ) ),
+							esc_attr( isset( $option['class'] ) && $option['class'] ? $option['class'] : '' ),
+							esc_attr( $id ),
 							( isset( $option['need_pro'] ) and $option['need_pro'] ) ? ' disabled="disabled"' : '',
 							isset( $option['label'] ) ? $option['label'] : '',
-							$html_element_name
+							esc_html( $html_element_name )
 						)
 					);
 					break;
@@ -745,26 +748,26 @@ class iworks_options {
 					}
 					$content .= sprintf(
 						'<img id="%s_img" src="%s" alt="" style="%s%sclear:right;display:block;margin-bottom:10px;" />',
-						$html_element_name,
-						$src ? $src : '',
+						esc_attr( $html_element_name ),
+						esc_attr( $src ? $src : '' ),
 						array_key_exists( 'max-width', $option ) && is_integer( $option['max-width'] ) ? sprintf( 'max-width: %dpx;', $option['max-width'] ) : '',
 						array_key_exists( 'max-height', $option ) && is_integer( $option['max-height'] ) ? sprintf( 'max-height: %dpx;', $option['max-height'] ) : ''
 					);
 					$content .= sprintf(
 						'<input type="hidden" name="%s" value="%s" />',
-						$html_element_name,
-						$this->get_option( $option_name, $option_group ),
-						$value
+						esc_attr( $html_element_name ),
+						esc_attr( $this->get_option( $option_name, $option_group ) ),
+						esc_attr( $value )
 					);
 					$content .= sprintf(
 						' <input type="button" class="button iworks_upload_button" value="%s" rel="#%s" />',
-						__( 'Select Image', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
-						$html_element_name
+						esc_attr__( 'Select Image', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
+						esc_attr( $html_element_name )
 					);
 					$content .= sprintf(
 						' <input type="button" class="button iworks_delete_button" value="%s" rel="#%s" %s/>',
-						__( 'Delete image', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
-						$html_element_name,
+						esc_attr__( 'Delete image', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
+						esc_attr( $html_element_name ),
 						empty( $value ) ? ' style="display:none"' : ''
 					);
 					break;
@@ -780,21 +783,21 @@ class iworks_options {
 					$classes[] = 'button';
 					$content  .= sprintf(
 						'<input type="button" name="%s" value="%s" class="%s" data-nonce="%s" />',
-						$html_element_name,
-						$option['value'],
-						implode( ' ', $classes ),
+						esc_attr( $html_element_name ),
+						esc_attr( $option['value'] ),
+						esc_attr( implode( ' ', $classes ) ),
 						wp_create_nonce( $html_element_name )
 					);
 					break;
 				default:
-					$content .= sprintf( 'not implemented type: %s', $option['type'] );
+					$content .= sprintf( 'not implemented type: %s', esc_html( $option['type'] ) );
 			}
 			if ( 'hidden' !== $option['type'] ) {
 				if ( isset( $option['description'] ) && $option['description'] ) {
 					if ( isset( $option['label'] ) && $option['label'] && 'subheading' !== $option['type'] ) {
 						$content .= '<br />';
 					}
-					$content .= sprintf( '<p class="description">%s</p>', $option['description'] );
+					$content .= sprintf( '<p class="description">%s</p>', esc_html( $option['description'] ) );
 				}
 				$content .= '</td>';
 				$content .= '</tr>';
@@ -811,7 +814,7 @@ class iworks_options {
 		 */
 		if ( $content ) {
 			if ( isset( $options['label'] ) && $options['label'] && ! $use_tabs ) {
-				$top .= sprintf( '<h3>%s</h3>', $options['label'] );
+				$top .= sprintf( '<h3>%s</h3>', esc_html( $options['label'] ) );
 			}
 			$top .= $hidden;
 			if ( $use_tabs ) {
@@ -822,14 +825,18 @@ class iworks_options {
 				$content  = $top . $content;
 			} else {
 				if ( $options['add_table'] ) {
-					$top .= sprintf( '<table class="form-table%s" style="%s" role="presentation">', isset( $options['widefat'] ) ? ' widefat' : '', isset( $options['style'] ) ? $options['style'] : '' );
+					$top .= sprintf(
+						'<table class="form-table%s" style="%s" role="presentation">',
+						esc_attr( isset( $options['widefat'] ) ? ' widefat' : '' ),
+						esc_attr( isset( $options['style'] ) ? $options['style'] : '' )
+					);
 					if ( isset( $options['thead'] ) ) {
-						$top .= sprintf( '<thead><tr class="%s">', implode( ' ', $tr_classes ) );
+						$top .= sprintf( '<thead><tr class="%s">', esc_attr( implode( ' ', $tr_classes ) ) );
 						foreach ( $options['thead'] as $text => $colspan ) {
 							$top .= sprintf(
 								'<th%s>%s</th>',
 								$colspan > 1 ? ' colspan="' . $colspan . '"' : '',
-								$text
+								esc_html( $text )
 							);
 						}
 						$top .= '</tr></thead>';
@@ -849,7 +856,11 @@ class iworks_options {
 		 * submit button
 		 */
 		if ( $options['show_submit_button'] ) {
-			$content .= get_submit_button( __( 'Save Changes', 'IWORKS_OPTIONS_TEXTDOMAIN' ), 'primary', 'submit_button' );
+			$content .= get_submit_button(
+				esc_html__( 'Save Changes', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
+				'primary',
+				'submit_button'
+			);
 		}
 		/**
 		 * iworks-options wrapper
@@ -1037,7 +1048,7 @@ class iworks_options {
 			return;
 		}
 		foreach ( $this->notices as $notice ) {
-			printf( '<div class="error"><p>%s</p></div>', $notice );
+			printf( '<div class="error"><p>%s</p></div>', esc_html( $notice ) );
 		}
 	}
 
@@ -1109,6 +1120,18 @@ class iworks_options {
 	 * update taxonomy options
 	 */
 	public function update_taxonomy_options( $option_group, $term_id ) {
+		/**
+		 * check for nonce
+		 */
+		$nonce_value = $this->get_nonce_value();
+		if (
+			is_wp_error( $nonce_value )
+			|| ! wp_verify_nonce( $nonce, $this->get_nonce_name() ) ) {
+			return;
+		}
+		/**
+		 * groups
+		 */
 		$this->option_group = $option_group;
 		$options            = $this->get_option_array();
 		/**
@@ -1130,7 +1153,20 @@ class iworks_options {
 				$term_id,
 				$option['name']
 			);
-			$value       = array_key_exists( $this->get_option_name( $option_name ), $_POST ) ? $_POST[ $this->get_option_name( $option_name ) ] : false;
+			/**
+			 * get & sanitize value
+			 *
+			 * @since 2.8.6 - added `sanitize_text_field`.
+			 */
+			$value = false;
+			if ( array_key_exists( $this->get_option_name( $option_name ), $_POST ) ) {
+				$value = sanitize_text_field( $_POST[ $this->get_option_name( $option_name ) ] );
+			}
+			/**
+			 * add custom sanitization
+			 *
+			 * @since 2.8.6
+			 */
 			if ( array_key_exists( 'sanitize_callback', $option ) && is_callable( $option['sanitize_callback'] ) ) {
 				$value = call_user_func( $option['sanitize_callback'], $value );
 			}
@@ -1199,12 +1235,12 @@ class iworks_options {
 		$data = array();
 		?>
 <div class="wrap iworks_options">
-	<h1><?php echo $options['page_title']; ?></h1>
+	<h1><?php echo esc_html( $options['page_title'] ); ?></h1>
 	<form method="post" action="<?php echo esc_url( $url ); ?>" id="<?php echo esc_attr( $this->get_option_name( 'admin_index' ) ); ?>">
 		<?php wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false ); ?>
 		<?php wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false ); ?>
 		<input type="hidden" name="action" value="save_howto_metaboxes_general" />
-		<div class="metabox-holder<?php echo empty( $screen_layout_columns ) || 2 == $screen_layout_columns ? ' has-right-sidebar' : ''; ?>">
+		<div class="metabox-holder<?php echo esc_attr( empty( $screen_layout_columns ) || 2 == $screen_layout_columns ? ' has-right-sidebar' : '' ); ?>">
 		<?php
 		/**
 		 * check metaboxes for key
@@ -1233,18 +1269,6 @@ class iworks_options {
 		 */
 		if ( array_key_exists( 'metaboxes', $this->options[ $option_name ] ) ) {
 			include_once ABSPATH . '/wp-admin/includes/meta-boxes.php';
-			?>
-<script type="text/javascript" id="<?php echo __CLASS__; ?>">
-//<![CDATA[
-jQuery(document).ready( function($) {
-// close postboxes that should be closed
-$('.if-js-closed').removeClass('if-js-closed').addClass('closed');
-// postboxes setup
-postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>');
-});
-//]]>
-</script>
-			<?php
 		}
 	}
 
@@ -1566,10 +1590,8 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 				esc_html( is_string( $input ) ? $input : $input['label'] )
 			);
 			if ( isset( $input['description'] ) ) {
-				$radio .= sprintf(
-					'<br /><span class="description">%s</span>',
-					$input['description']
-				);
+				$radio .= '<br>';
+				$radio .= $this->description( '', '', array( 'description' => $input['description'] ) );
 			}
 			$radio .= '</li>';
 		}
@@ -1583,7 +1605,7 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 		if ( ! isset( $args['value'] ) || empty( $args['value'] ) ) {
 			return '';
 		}
-		return sprintf( '<p class="description">%s</p>', $args['value'] );
+		return sprintf( '<p class="description">%s</p>', esc_html( $args['value'] ) );
 	}
 
 	private function money( $name, $value = '', $args = array() ) {
@@ -1649,10 +1671,10 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 			'zip'     => '',
 		);
 		$i18n     = array(
-			'country' => __( 'Country', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
-			'city'    => __( 'City', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
-			'street'  => __( 'Street', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
-			'zip'     => __( 'ZIP code', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
+			'country' => esc_html__( 'Country', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
+			'city'    => esc_html__( 'City', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
+			'street'  => esc_html__( 'Street', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
+			'zip'     => esc_html__( 'ZIP code', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
 		);
 		$value    = wp_parse_args( $value, $defaults );
 		/**
@@ -1665,7 +1687,7 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 			$content .= $i18n[ $key ];
 			$content .= '<br />';
 			$content .= $this->input(
-				sprintf( '%s[%s]', $name, esc_attr( $key ) ),
+				sprintf( '%s[%s]', esc_attr( $name ), esc_attr( $key ) ),
 				$value[ $key ],
 				array(
 					'class' => 'large-text iworks-options-text',
@@ -1808,8 +1830,8 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 	public function get_switch_button_data() {
 		$data = array(
 			'labels' => array(
-				'off_label' => __( 'OFF', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
-				'on_label'  => __( 'ON', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
+				'off_label' => esc_html__( 'OFF', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
+				'on_label'  => esc_html__( 'ON', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
 			),
 		);
 		return $data;
@@ -1860,5 +1882,29 @@ postboxes.add_postbox_toggles('<?php echo $this->pagehooks[ $option_name ]; ?>')
 	 */
 	public function set_plugin( $plugin ) {
 		$this->plugin = $plugin;
+	}
+
+	/**
+	 * get nonce value
+	 *
+	 * @since 2.8.6
+	 */
+	private function get_nonce_value() {
+		$nonce_names = array( $this->get_nonce_name(), '_wpnonce' );
+		foreach ( $nonce_names as $nonce_name ) {
+			if ( isset( $_REQUEST[ $nonce_name ] ) ) {
+				return $_REQUEST[ $nonce_value ];
+			}
+		}
+		return new WP_Error( 'security', esc_html__( 'Failed Security Check', 'IWORKS_OPTIONS_TEXTDOMAIN' ) );
+	}
+
+	/**
+	 * get nonce name
+	 *
+	 * @since 2.8.6
+	 */
+	private function get_nonce_name() {
+		return apply_filters( 'iworks_options_nonce_name', 'iworks_options' );
 	}
 }

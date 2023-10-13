@@ -6,6 +6,11 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.8.6 (2023-10-13)
+* Data input sanitization has been added.
+* Escaping has been added.
+
+
 ##### 2.8.5 (2022-06-20)
 * The creation of dynamic property has been removed. It causes a warning in PHP 8.2. Props for [waveman777](https://wordpress.org/support/users/waveman777/).
 * Select2 images has been optimized.
