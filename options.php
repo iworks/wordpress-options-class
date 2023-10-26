@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.8.6
+Version: 2.8.7
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -75,7 +75,7 @@ class iworks_options {
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '2.8.6';
+		$this->version              = '2.8.7';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -401,8 +401,8 @@ class iworks_options {
 						'<fieldset id="iworks_%s" class="ui-tabs-panel ui-widget-content ui-corner-bottom"%s>',
 						esc_attr( crc32( $option['label'] ) ),
 						sprintf(
-							( isset( $option['class'] ) && $option['class'] ) ? ' rel="%s"' : '',
-							esc_attr( $option['class'] )
+							( isset( $option['class'] ) && $option['class'] ) ?
+							sprintf( ' rel="%s"', esc_attr( $option['class'] ) ) : ''
 						)
 					);
 					if ( ! $use_tabs ) {
@@ -668,7 +668,7 @@ class iworks_options {
 								esc_attr( $name_sufix ),
 								esc_attr( implode( ' ', $classes ) ),
 								$extra,
-								esc_html( $select )
+								$select
 							);
 						}
 					}

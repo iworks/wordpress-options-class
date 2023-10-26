@@ -6,6 +6,11 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.8.7 (2023-10-26)
+* One the data escaping has been removed.
+* The empty `index.php` file has been added to few directories.
+* The issue with undefined variable has been fixed.
+
 ##### 2.8.6 (2023-10-13)
 * Data input sanitization has been added.
 * Escaping has been added.
