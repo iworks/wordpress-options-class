@@ -742,8 +742,12 @@ class iworks_options {
 					if ( is_admin() ) {
 						wp_enqueue_media();
 					}
-					$src = $value    = $this->get_option( $option_name, $option_group );
-					if ( preg_match( '/^\d+/', $value ) && 0 < intval( $value ) ) {
+					$src = $value = $this->get_option( $option_name, $option_group );
+					if (
+						$value
+						&& preg_match( '/^\d+/', $value )
+						&& 0 < intval( $value )
+					) {
 						$src = wp_get_attachment_url( $value );
 					}
 					$content .= sprintf(
@@ -885,7 +889,10 @@ class iworks_options {
 			/**
 			 * don't register certain type setting or with empty name
 			 */
-			if ( preg_match( '/^(sub)?heading$/', $option['type'] ) || empty( $option['name'] ) ) {
+			if (
+				empty( $option['name'] )
+				|| preg_match( '/^(sub)?heading$/', $option['type'] )
+			) {
 				continue;
 			}
 			/**

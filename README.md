@@ -6,6 +6,9 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.8.8 (2023-xx-xx)
+* The warnig for regex check on null value has been fixed.
+
 ##### 2.8.7 (2023-10-26)
 * One the data escaping has been removed.
 * The empty `index.php` file has been added to few directories.
