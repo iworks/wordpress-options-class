@@ -6,8 +6,9 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
-##### 2.8.8 (2023-xx-xx)
+##### 2.8.8 (2023-11-06)
 * The warnig for regex check on null value has been fixed.
+* The warning creation of dynamic property in the class has been fixed.
 
 ##### 2.8.7 (2023-10-26)
 * One the data escaping has been removed.

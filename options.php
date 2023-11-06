@@ -34,6 +34,7 @@ if ( class_exists( 'iworks_options' ) ) {
 
 class iworks_options {
 
+	private $options;
 	private $option_function_name;
 	private $option_group;
 	private $option_prefix;
