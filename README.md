@@ -8,6 +8,7 @@ Changelog
 
 ##### 2.8.9 (2023-xx-xx)
 * The `date()` function has been replced by the `gmdate()` function.
+* The select2 jQuery libray has been updated to 4.0.13.
 
 ##### 2.8.8 (2023-11-06)
 * The warnig for regex check on null value has been fixed.
