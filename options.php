@@ -1012,7 +1012,7 @@ class iworks_options {
 				add_option( $this->option_prefix . $option['name'], $option['default'], '', isset( $option['autoload'] ) ? $option['autoload'] : 'yes' );
 			}
 		}
-		add_option( $this->option_prefix . 'cache_stamp', date( 'c' ) );
+		add_option( $this->option_prefix . 'cache_stamp', gmdate( 'c' ) );
 	}
 
 	public function deactivate() {

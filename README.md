@@ -6,6 +6,9 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.8.9 (2023-xx-xx)
+* The `date()` function has been replced by the `gmdate()` function.
+
 ##### 2.8.8 (2023-11-06)
 * The warnig for regex check on null value has been fixed.
 * The warning creation of dynamic property in the class has been fixed.
