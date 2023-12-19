@@ -1294,28 +1294,27 @@ class iworks_options {
 		/**
 		 * check metaboxes for key
 		 */
-		if ( ! array_key_exists( 'metaboxes', $this->options[ $option_name ] ) ) {
-			return;
-		}
-		if ( ! count( $this->options[ $option_name ]['metaboxes'] ) ) {
-			return;
-		}
-		/**
-		 * ensure, that the needed javascripts been loaded to allow drag/drop,
-		 * expand/collapse and hide/show of boxes
-		 */
-		wp_enqueue_script( 'common' );
-		wp_enqueue_script( 'wp-lists' );
-		wp_enqueue_script( 'postbox' );
-		foreach ( $this->options[ $option_name ]['metaboxes'] as $id => $data ) {
-			add_meta_box(
-				$id,
-				$data['title'],
-				$data['callback'],
-				$this->pagehooks[ $option_name ],
-				$data['context'],
-				$data['priority']
-			);
+		if (
+			array_key_exists( 'metaboxes', $this->options[ $option_name ] )
+			&& count( $this->options[ $option_name ]['metaboxes'] )
+		) {
+			/**
+			 * ensure, that the needed javascripts been loaded to allow drag/drop,
+			 * expand/collapse and hide/show of boxes
+			 */
+			wp_enqueue_script( 'common' );
+			wp_enqueue_script( 'wp-lists' );
+			wp_enqueue_script( 'postbox' );
+			foreach ( $this->options[ $option_name ]['metaboxes'] as $id => $data ) {
+				add_meta_box(
+					$id,
+					$data['title'],
+					$data['callback'],
+					$this->pagehooks[ $option_name ],
+					$data['context'],
+					$data['priority']
+				);
+			}
 		}
 		/**
 		 * wp_enqueue_script

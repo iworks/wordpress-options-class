@@ -6,6 +6,9 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.9.0 (2023-12-19)
+* Loading assets has been fixed.
+
 ##### 2.8.9 (2023-11-30)
 * The `date()` function has been replced by the `gmdate()` function.
 * The select2 jQuery libray has been updated to 4.0.13.
