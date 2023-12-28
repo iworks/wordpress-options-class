@@ -6,6 +6,9 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.9.1 (2023-12-28)
+* Extra description for buttons has been removed.
+
 ##### 2.9.0 (2023-12-19)
 * Loading assets has been fixed.
 
