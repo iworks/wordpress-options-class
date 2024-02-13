@@ -995,9 +995,18 @@ class iworks_options {
 		return null;
 	}
 
+	/**
+	 * save default options
+	 */
 	public function activate() {
 		$options = apply_filters( $this->option_function_name, call_user_func( $this->option_function_name ) );
 		foreach ( $options as $key => $data ) {
+			if ( ! is_array( $data ) ) {
+				continue;
+			}
+			if ( ! isset( $data['options'] ) ) {
+				continue;
+			}
 			foreach ( $data['options'] as $option ) {
 				if (
 					( isset( $option['type'] ) && $option['type'] == 'heading' )
@@ -1012,9 +1021,18 @@ class iworks_options {
 		add_option( $this->option_prefix . 'cache_stamp', gmdate( 'c' ) );
 	}
 
+	/**
+	 * delete options on deactivate
+	 */
 	public function deactivate() {
 		$options = apply_filters( $this->option_function_name, call_user_func( $this->option_function_name ) );
 		foreach ( $options as $key => $data ) {
+			if ( ! is_array( $data ) ) {
+				continue;
+			}
+			if ( ! isset( $data['options'] ) ) {
+				continue;
+			}
 			foreach ( $data['options'] as $option ) {
 				if (
 					( isset( $option['type'] ) && 'heading' == $option['type'] )
