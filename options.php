@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.9.2
+Version: 2.9.3
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -76,7 +76,7 @@ class iworks_options {
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '2.9.2';
+		$this->version              = '2.9.3';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -425,17 +425,58 @@ class iworks_options {
 				if ( isset( $option['related_to'] ) && isset( $related_to[ $option['related_to'] ] ) && $related_to[ $option['related_to'] ] == 0 ) {
 					$classes[] = 'hidden';
 				}
+				/**
+				 * Allow to add code before the TR HTML tag.
+				 *
+				 * @since 2.8.3
+				 *
+				 * @param string $content Content, default empty string.
+				 * @param array $option Current option array.
+				 */
+				$content .= apply_filters( 'iworks/options/filter/tr/before/' . $option_name, '', $option );
 				$content .= sprintf(
 					'<tr valign="top" id="tr_%s" class="%s">',
 					esc_attr( $option_name ? $option_name : '' ),
 					esc_attr( implode( ' ', $tr_classes ) )
 				);
-				$content .= sprintf(
-					'<th scope="row">%s%s</th>',
-					isset( $option['dashicon'] ) && $option['dashicon'] ? sprintf( '<span class="dashicons dashicons-%s"></span>&nbsp;', esc_attr( $option['dashicon'] ) ) : '',
-					isset( $option['th'] ) && $option['th'] ? $option['th'] : '&nbsp;'
-				);
+				/**
+				 * TH
+				 */
+				$content .= '<th scope="row">';
+				/**
+				 * Allow to add code before a content of the TH HTML tag.
+				 *
+				 * @since 2.8.3
+				 *
+				 * @param string $content Content, default empty string.
+				 * @param array $option Current option array.
+				 */
+				$content .= apply_filters( 'iworks/options/filter/th/begin/' . $option_name, '', $option );
+				$content .= isset( $option['dashicon'] ) && $option['dashicon'] ? sprintf( '<span class="dashicons dashicons-%s"></span>&nbsp;', esc_attr( $option['dashicon'] ) ) : '';
+				$content .= isset( $option['th'] ) && $option['th'] ? $option['th'] : '&nbsp;';
+				/**
+				 * Allow to add code after a content of the TH HTML tag.
+				 *
+				 * @since 2.8.3
+				 *
+				 * @param string $content Content, default empty string.
+				 * @param array $option Current option array.
+				 */
+				$content .= apply_filters( 'iworks/options/filter/th/end/' . $option_name, '', $option );
+				$content .= '</th>';
+				/**
+				 * TD
+				 */
 				$content .= '<td>';
+				/**
+				 * Allow to add code before a content of the TD HTML tag.
+				 *
+				 * @since 2.8.3
+				 *
+				 * @param string $content Content, default empty string.
+				 * @param array $option Current option array.
+				 */
+				$content .= apply_filters( 'iworks/options/td/begin/' . $option_name, '', $option );
 			}
 			$html_element_name = $option_name ? $this->option_prefix . $option_name : '';
 			$filter_name       = $html_element_name ? $option_group . '_' . $html_element_name : null;
@@ -801,8 +842,26 @@ class iworks_options {
 					}
 					$content .= sprintf( '<p class="description">%s</p>', esc_html( $option['description'] ) );
 				}
+				/**
+				 * Allow to add code after a content of the TD HTML tag.
+				 *
+				 * @since 2.8.3
+				 *
+				 * @param string $content Content, default empty string.
+				 * @param array $option Current option array.
+				 */
+				$content .= apply_filters( 'iworks/options/td/end/' . $option_name, '', $option );
 				$content .= '</td>';
 				$content .= '</tr>';
+				/**
+				 * Allow to add code before the TR HTML tag.
+				 *
+				 * @since 2.8.3
+				 *
+				 * @param string $content Content, default empty string.
+				 * @param array $option Current option array.
+				 */
+				$content .= apply_filters( 'iworks/options/filter/tr/after/' . $option_name, '', $option );
 			}
 		}
 		/**

@@ -5,6 +5,13 @@ Options Class for WordPress plugins &amp; themes
 
 Changelog
 ---------
+##### 2.9.3 (2025-01-26)
+* The filter `'iworks/options/filter/tr/before/' . $option_name` has been added.
+* The filter `'iworks/options/filter/tr/after/' . $option_name` has been added.
+* The filter `'iworks/options/filter/td/begin/' . $option_name` has been added.
+* The filter `'iworks/options/filter/td/end/' . $option_name` has been added.
+* The filter `'iworks/options/filter/th/begin/' . $option_name` has been added.
+* The filter `'iworks/options/filter/th/end/' . $option_name` has been added.
 
 ##### 2.9.2 (2024-02-13)
 * The warning during plugin activation has been fixed. 
