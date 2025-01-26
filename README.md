@@ -5,6 +5,9 @@ Options Class for WordPress plugins &amp; themes
 
 Changelog
 ---------
+##### 2.9.4 (2025-01-26)
+* The `$option` array have been added to few filters.
+
 ##### 2.9.3 (2025-01-26)
 * The filter `'iworks/options/filter/tr/before/' . $option_name` has been added.
 * The filter `'iworks/options/filter/tr/after/' . $option_name` has been added.

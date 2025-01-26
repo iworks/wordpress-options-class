@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.9.3
+Version: 2.9.4
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -76,7 +76,7 @@ class iworks_options {
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '2.9.3';
+		$this->version              = '2.9.4';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -551,7 +551,7 @@ class iworks_options {
 						esc_attr( implode( ' ', $classes ) ),
 						esc_html( isset( $option['label'] ) ? $option['label'] : '' )
 					);
-					$content                   .= apply_filters( $filter_name, $checkbox );
+					$content                   .= apply_filters( $filter_name, $checkbox, $option );
 					break;
 				case 'checkbox_group':
 					$option_value = $this->get_option( $option_name, $option_group );
@@ -605,7 +605,7 @@ class iworks_options {
 						/**
 					 * add extra options, maybe dynamic?
 					 */
-						$radio_options = apply_filters( $filter_name . '_data', $radio_options );
+						$radio_options = apply_filters( $filter_name . '_data', $radio_options, $option );
 						$radio         = apply_filters( $filter_name . '_content', null, $radio_options, $html_element_name, $option_name, $option_value );
 						if ( empty( $radio ) ) {
 							foreach ( $radio_options as $value => $input ) {
@@ -642,7 +642,7 @@ class iworks_options {
 								$radio = sprintf( '<ul>%s</ul>', $radio );
 							}
 						} else {
-							$radio = apply_filters( $filter_name, $radio );
+							$radio = apply_filters( $filter_name, $radio, $option );
 							if ( empty( $radio ) ) {
 								$content .= sprintf(
 									'<p>Error: no <strong>radio</strong> array key for option: <em>%s</em>.</p>',
@@ -650,7 +650,7 @@ class iworks_options {
 								);
 							}
 						}
-						$content .= apply_filters( $filter_name, $radio );
+						$content .= apply_filters( $filter_name, $radio, $option );
 					}
 					break;
 				case 'select':
@@ -714,7 +714,7 @@ class iworks_options {
 							);
 						}
 					}
-					$content .= apply_filters( $filter_name, $select );
+					$content .= apply_filters( $filter_name, $select, $option );
 					break;
 				case 'textarea':
 					$value    = $this->get_option( $option_name, $option_group );
