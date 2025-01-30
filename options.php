@@ -9,7 +9,7 @@ Author URI: http://iworks.pl/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Copyright 2011-2023 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2011-2025 Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -34,7 +34,12 @@ if ( class_exists( 'iworks_options' ) ) {
 
 class iworks_options {
 
-	private $options;
+	/**
+	 * Core options.
+	 *
+	 * @since 1.0.0
+	 */
+	private array $options;
 	private $option_function_name;
 	private $option_group;
 	private $option_prefix;
