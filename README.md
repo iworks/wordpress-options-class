@@ -5,6 +5,10 @@ Options Class for WordPress plugins &amp; themes
 
 Changelog
 ---------
+
+##### 2.9.5 (2025-02-11)
+* The `sanitizatize_callback` method has been added to the `register_settings` calls.
+
 ##### 2.9.4 (2025-01-26)
 * The `$option` array have been added to few filters.
 

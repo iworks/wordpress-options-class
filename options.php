@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.9.4
+Version: 2.9.5
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -81,7 +81,7 @@ class iworks_options {
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '2.9.4';
+		$this->version              = '2.9.5';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -960,13 +960,48 @@ class iworks_options {
 			/**
 			 * register setting
 			 */
-			$args = array();
+			$args = array(
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			);
+			/**
+			 * set type
+			 */
+			if ( isset( $option['type'] ) ) {
+				switch ( $option['type'] ) {
+					case 'string':
+					case 'boolean':
+					case 'integer':
+					case 'number':
+					case 'array':
+					case 'object':
+						$args['type'] = $option['type'];
+						break;
+					case 'text':
+					case 'textarea':
+					case 'wpColorPicker':
+						$args['type'] = 'string';
+						break;
+					case 'checkbox':
+						$args['type'] = 'integer';
+						break;
+				}
+			}
+			/**
+			 * set own callback
+			 */
 			if ( isset( $option['sanitize_callback'] ) ) {
 				$args['sanitize_callback'] = $option['sanitize_callback'];
 			}
+			/**
+			 * set description
+			 */
 			if ( isset( $option['description'] ) ) {
 				$args['description'] = $option['description'];
 			}
+			/**
+			 * need to flush_rewrite_rules?
+			 */
 			if ( isset( $option['flush_rewrite_rules'] ) ) {
 				$action = sprintf( 'update_option_%s%s', $this->option_prefix, $option['name'] );
 				add_action( $action, array( $this, 'flush_rewrite_rules' ) );
@@ -990,7 +1025,11 @@ class iworks_options {
 		if ( isset( $options['use_tabs'] ) && $options['use_tabs'] ) {
 			register_setting(
 				$this->option_prefix . 'index',
-				$this->option_prefix . 'last_used_tab'
+				$this->option_prefix . 'last_used_tab',
+				array(
+					'type'              => 'string',
+					'sanitize_callback' => 'sanitize_text_field',
+				)
 			);
 		}
 		/**
@@ -1351,12 +1390,6 @@ class iworks_options {
 	</form>
 </div>
 		<?php
-		/**
-		 * check metaboxes for key
-		 */
-		if ( array_key_exists( 'metaboxes', $this->options[ $option_name ] ) ) {
-			include_once ABSPATH . '/wp-admin/includes/meta-boxes.php';
-		}
 	}
 
 	public function load_page() {
