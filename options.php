@@ -798,7 +798,8 @@ class iworks_options {
 						$src = wp_get_attachment_url( $value );
 					}
 					$content .= sprintf(
-						'<img id="%s_img" src="%s" alt="" style="%s%sclear:right;display:block;margin-bottom:10px;" />',
+						'<%s id="%s_img" src="%s" alt="" style="%s%sclear:right;display:block;margin-bottom:10px;" />',
+						esc_attr( 'img' ),
 						esc_attr( $html_element_name ),
 						esc_attr( $src ? $src : '' ),
 						array_key_exists( 'max-width', $option ) && is_integer( $option['max-width'] ) ? sprintf( 'max-width: %dpx;', $option['max-width'] ) : '',
@@ -901,7 +902,7 @@ class iworks_options {
 						foreach ( $options['thead'] as $text => $colspan ) {
 							$top .= sprintf(
 								'<th%s>%s</th>',
-								$colspan > 1 ? ' colspan="' . $colspan . '"' : '',
+								$colspan > 1 ? ' colspan="' . intval( $colspan ) . '"' : '',
 								esc_html( $text )
 							);
 						}
@@ -929,12 +930,22 @@ class iworks_options {
 			);
 		}
 		/**
+		 * add tags to wp_kses()
+		 */
+		$tags = $this->get_allowed_tags();
+		/**
 		 * iworks-options wrapper
 		 */
-		$content = sprintf( '<div class="iworks-options">%s</div>', $content );
+		$content = sprintf(
+			'<div class="iworks-options">%s</div>',
+			wp_kses( $content, $tags )
+		);
 		/* print ? */
 		if ( $echo ) {
-			echo $content;
+			/**
+			 * this is alredy escaped
+			 */
+			echo wp_kses( $content, $tags );
 			return;
 		}
 		return $content;
@@ -2012,7 +2023,7 @@ class iworks_options {
 		$nonce_names = array( $this->get_nonce_name(), '_wpnonce' );
 		foreach ( $nonce_names as $nonce_name ) {
 			if ( isset( $_REQUEST[ $nonce_name ] ) ) {
-				return $_REQUEST[ $nonce_value ];
+				return sanitize_text_field( $_REQUEST[ $nonce_value ] );
 			}
 		}
 		return new WP_Error( 'security', esc_html__( 'Failed Security Check', 'IWORKS_OPTIONS_TEXTDOMAIN' ) );
@@ -2025,5 +2036,61 @@ class iworks_options {
 	 */
 	private function get_nonce_name() {
 		return apply_filters( 'iworks_options_nonce_name', 'iworks_options' );
+	}
+
+	/**
+	 * get allowed tags
+	 *
+	 * @since 2.9.5
+	 */
+	private function get_allowed_tags() {
+		$tags = array(
+			'input' => array(
+				'accept'              => true,
+				'alt'                 => true,
+				'aria-*'              => true,
+				'autocomplete'        => true,
+				'autofocus'           => true,
+				'checked'             => true,
+				'class'               => true,
+				'data-*'              => true,
+				'dirname'             => true,
+				'disabled'            => true,
+				'form'                => true,
+				'formaction'          => true,
+				'formenctype'         => true,
+				'formmethod'          => true,
+				'formnovalidate'      => true,
+				'formtarget'          => true,
+				'height'              => true,
+				'id'                  => true,
+				'list'                => true,
+				'max'                 => true,
+				'maxlength'           => true,
+				'min'                 => true,
+				'minlength'           => true,
+				'multiple'            => true,
+				'name'                => true,
+				'pattern'             => true,
+				'placeholder'         => true,
+				'popovertarget'       => true,
+				'popovertargetaction' => true,
+				'readonly'            => true,
+				'required'            => true,
+				'size'                => true,
+				'src'                 => true,
+				'step'                => true,
+				'type'                => true,
+				'value'               => true,
+				'width'               => true,
+			),
+		);
+		return apply_filters(
+			'iworks/options/wp_kses_allowed_html',
+			wp_parse_args(
+				$tags,
+				wp_kses_allowed_html( 'post' )
+			)
+		);
 	}
 }
