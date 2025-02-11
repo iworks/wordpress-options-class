@@ -11,6 +11,7 @@ Changelog
 * The `sanitize_text_field` users has been added.
 * The `sanitizatize_callback` method has been added to the `register_settings` calls.
 * The filter `iworks/options/wp_kses_allowed_html` has been added.
+* The `wp_unslash` function usage has been added.
 
 ##### 2.9.4 (2025-01-26)
 * The `$option` array have been added to few filters.

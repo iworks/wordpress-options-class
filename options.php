@@ -1297,7 +1297,7 @@ class iworks_options {
 			 */
 			$value = false;
 			if ( array_key_exists( $this->get_option_name( $option_name ), $_POST ) ) {
-				$value = sanitize_text_field( $_POST[ $this->get_option_name( $option_name ) ] );
+				$value = sanitize_text_field( wp_unslash( $_POST[ $this->get_option_name( $option_name ) ] ) );
 			}
 			/**
 			 * add custom sanitization
@@ -1321,10 +1321,10 @@ class iworks_options {
 	public function select_page_helper( $name, $show_option_none = false, $post_type = 'page' ) {
 		$args = array(
 			'echo'             => false,
-			'name'             => $this->get_option_name( $name ),
-			'selected'         => $this->get_option( $name ),
-			'show_option_none' => $show_option_none,
-			'post_type'        => $post_type,
+			'name'             => esc_attr( $this->get_option_name( $name ) ),
+			'selected'         => esc_attr( $this->get_option( $name ) ),
+			'show_option_none' => esc_attr( $show_option_none ),
+			'post_type'        => esc_attr( $post_type ),
 		);
 		return wp_dropdown_pages( $args );
 	}
@@ -2023,7 +2023,7 @@ class iworks_options {
 		$nonce_names = array( $this->get_nonce_name(), '_wpnonce' );
 		foreach ( $nonce_names as $nonce_name ) {
 			if ( isset( $_REQUEST[ $nonce_name ] ) ) {
-				return sanitize_text_field( $_REQUEST[ $nonce_value ] );
+				return sanitize_text_field( wp_unslash( $_REQUEST[ $nonce_value ] ) );
 			}
 		}
 		return new WP_Error( 'security', esc_html__( 'Failed Security Check', 'IWORKS_OPTIONS_TEXTDOMAIN' ) );
