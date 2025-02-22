@@ -6,6 +6,9 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.9.6 (2025-02-22)
+* Forms tags usage has been added to `wp_kses` allowed tags.  Props for [Rafał Siemiński](https://rafal.muko.pl/).
+
 ##### 2.9.5 (2025-02-11)
 * The `wp_kses` usage has been added.
 * The `sanitize_text_field` users has been added.

@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.9.5
+Version: 2.9.6
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -81,7 +81,7 @@ class iworks_options {
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '2.9.5';
+		$this->version              = '2.9.6';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -2045,7 +2045,7 @@ class iworks_options {
 	 */
 	private function get_allowed_tags() {
 		$tags = array(
-			'input' => array(
+			'input'    => array(
 				'accept'              => true,
 				'alt'                 => true,
 				'aria-*'              => true,
@@ -2083,6 +2083,57 @@ class iworks_options {
 				'type'                => true,
 				'value'               => true,
 				'width'               => true,
+			),
+			'optgroup' => array(
+				'label'  => true,
+				'class'  => true,
+				'data-*' => true,
+				'aria-*' => true,
+				'id'     => true,
+			),
+			'select'   => array(
+				'autocomplete' => true,
+				'autofocus'    => true,
+				'disabled '    => true,
+				'form'         => true,
+				'multiple'     => true,
+				'name'         => true,
+				'class'        => true,
+				'data-*'       => true,
+				'aria-*'       => true,
+				'id'           => true,
+				'required'     => true,
+				'size'         => true,
+			),
+			'option'   => array(
+				'label'     => true,
+				'disabled ' => true,
+				'value'     => true,
+				'selected'  => true,
+				'class'     => true,
+				'data-*'    => true,
+				'aria-*'    => true,
+				'id'        => true,
+			),
+			'textarea' => array(
+				'autocomplete' => true,
+				'autofocus'    => true,
+				'cols'         => true,
+				'dirname'      => true,
+				'disabled'     => true,
+				'form'         => true,
+				'maxlength'    => true,
+				'minlength'    => true,
+				'name'         => true,
+				'placeholder'  => true,
+				'readonly'     => true,
+				'required'     => true,
+				'rows'         => true,
+				'wrap'         => true,
+				'class'        => true,
+				'data-*'       => true,
+				'aria-*'       => true,
+				'id'           => true,
 			),
 		);
 		return apply_filters(
