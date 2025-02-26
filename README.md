@@ -6,6 +6,10 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.9.7 (2025-02-26)
+* Atributes `data-*` has been added.
+* Languages files of [select2](https://github.com/select2/select2) has been added.
+
 ##### 2.9.6 (2025-02-22)
 * Forms tags usage has been added to `wp_kses` allowed tags.  Props for [Rafał Siemiński](https://rafal.muko.pl/).
 
@@ -38,7 +42,7 @@ Changelog
 
 ##### 2.8.9 (2023-11-30)
 * The `date()` function has been replced by the `gmdate()` function.
-* The select2 jQuery libray has been updated to 4.0.13.
+* The [select2](https://github.com/select2/select2) jQuery libray has been updated to 4.0.13.
 * The deprecated `null` value in the `add_option()` function has been replced by `''`.
 
 ##### 2.8.8 (2023-11-06)
@@ -57,7 +61,7 @@ Changelog
 
 ##### 2.8.5 (2022-06-20)
 * The creation of dynamic property has been removed. It causes a warning in PHP 8.2. Props for [waveman777](https://wordpress.org/support/users/waveman777/).
-* Select2 images has been optimized.
+* [Select2](https://github.com/select2/select2) images has been optimized.
 
 ##### 2.8.4 (2022-04-04)
 * Fixed PHP < 8 error.
@@ -140,7 +144,7 @@ Changelog
 ##### 2.6.0 (2017-05-12)
 
 * IMPROVMENT: added slide for checkboxes.
-* IMPROVMENT: added select2.
+* IMPROVMENT: added [select2](https://github.com/select2/select2).
 * IMPROVMENT: added indivudual functions to render elements.
 
 ##### 2.4.0 (2015-11-11)
