@@ -810,28 +810,6 @@ class iworks_options {
 							isset( $option['label'] ) ? $option['label'] : ''
 						)
 					);
-					// l(
-						// sprintf(
-							// '<input %s type="text" name="%s" value="%s" class="wpColorPicker %s" %s%s> %s',
-							// esc_attr( $id ),
-							// esc_attr( $html_element_name ),
-							// esc_attr( $this->get_option( $option_name, $option_group ) ),
-							// esc_attr( isset( $option['class'] ) && $option['class'] ? $option['class'] : '' ),
-							// ( isset( $option['need_pro'] ) and $option['need_pro'] ) ? ' disabled="disabled"' : '',
-							// $data_string,
-							// isset( $option['label'] ) ? $option['label'] : ''
-						// )
-					// );
-					// l([
-							// esc_attr( $html_element_name ),
-							// esc_attr( $this->get_option( $option_name, $option_group ) ),
-							// esc_attr( isset( $option['class'] ) && $option['class'] ? $option['class'] : '' ),
-							// esc_attr( $id ),
-							// ( isset( $option['need_pro'] ) and $option['need_pro'] ) ? ' disabled="disabled"' : '',
-							// esc_html( $html_element_name ),
-							// $data_string,
-							// isset( $option['label'] ) ? $option['label'] : '',
-					// ]);
 					break;
 				case 'image':
 					if ( is_admin() ) {
@@ -846,7 +824,7 @@ class iworks_options {
 						$src = wp_get_attachment_url( $value );
 					}
 					$content .= sprintf(
-						'<%s id="%s_img" src="%s" alt="" style="%s%sclear:right;display:block;margin-bottom:10px;">',
+						'<%s id="%s_img" src="%s" alt="" style="%s%s;margin-bottom:10px;"><br>',
 						esc_attr( 'img' ),
 						esc_attr( $html_element_name ),
 						esc_attr( $src ? $src : '' ),
@@ -1253,7 +1231,15 @@ class iworks_options {
 		if ( ( $default_value || $forece_default ) && is_null( $option_value ) ) {
 			$option_value = $default_value;
 		}
-		return $option_value;
+		return apply_filters(
+			sprintf(
+				'iworks/option/get/%s/%s/%s',
+				$this->plugin,
+				$option_group,
+				$option_name
+			),
+			$option_value
+		);
 	}
 
 	public function get_all_options() {

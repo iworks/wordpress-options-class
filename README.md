@@ -6,9 +6,10 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
-##### 2.9.7 (2025-02-26)
+##### 2.9.7 (2025-02-27)
 * Atributes `data-*` has been added.
 * Languages files of [select2](https://github.com/select2/select2) has been added.
+* The filter `'iworks/option/get/$plugin/$option_group/$option_name` has been added.
 
 ##### 2.9.6 (2025-02-22)
 * Forms tags usage has been added to `wp_kses` allowed tags.  Props for [Rafał Siemiński](https://rafal.muko.pl/).
