@@ -6,8 +6,12 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.9.8 (2025-03-11)
+* The `script` tag has been added to `wp_kses' allowed tags.
+* The `style` tag has been added to `wp_kses' allowed tags.
+
 ##### 2.9.7 (2025-02-27)
-* Atributes `data-*` has been added.
+* Atributes `data-*` has been added to `wp_kses' allowed tags.
 * Languages files of [select2](https://github.com/select2/select2) has been added.
 * The filter `'iworks/option/get/$plugin/$option_group/$option_name` has been added.
 
