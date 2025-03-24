@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.9.8
+Version: 2.9.9
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -81,7 +81,7 @@ class iworks_options {
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '2.9.8';
+		$this->version              = '2.9.9';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -1024,6 +1024,12 @@ class iworks_options {
 					case 'checkbox':
 						$args['type'] = 'integer';
 						break;
+					case 'array':
+					case 'object':
+					case 'checkbox_group':
+						$args['type'] = $option['type'];
+						unset( $args['sanitize_callback'] );
+						break;
 				}
 			}
 			/**
@@ -1044,6 +1050,15 @@ class iworks_options {
 			if ( isset( $option['flush_rewrite_rules'] ) ) {
 				$action = sprintf( 'update_option_%s%s', $this->option_prefix, $option['name'] );
 				add_action( $action, array( $this, 'flush_rewrite_rules' ) );
+			}
+			/**
+			 * remove sanitize_callback for complex object
+			 * https://github.com/iworks/wordpress-options-class/issues/4
+			 *
+			 * @since 2.9.9
+			 */
+			if ( isset( $option['multiple'] ) && $option['multiple'] ) {
+				unset( $args['sanitize_callback'] );
 			}
 			/**
 			 * register

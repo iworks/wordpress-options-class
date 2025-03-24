@@ -6,6 +6,9 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 2.9.9 (2025-03-24)
+* The data sanitization for complex values has been removed. [#4](https://github.com/iworks/wordpress-options-class/issues/4)
+
 ##### 2.9.8 (2025-03-11)
 * The `script` tag has been added to `wp_kses' allowed tags.
 * The `style` tag has been added to `wp_kses' allowed tags.
