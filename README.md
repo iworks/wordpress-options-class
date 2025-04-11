@@ -6,6 +6,9 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 3.0.0 (2025-04-11)
+* Typo for nonce variable has been fixed.
+
 ##### 2.9.9 (2025-03-24)
 * The data sanitization for complex values has been removed. [#4](https://github.com/iworks/wordpress-options-class/issues/4)
 
