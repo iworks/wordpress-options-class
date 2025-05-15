@@ -6,6 +6,11 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 3.0.1 (2025-05-14)
+* Fixed security issues with HTML escaping in option descriptions and radio fields.
+* Added proper sanitization for option descriptions using `wp_kses_post()`.
+* Updated version number in class header and constructor.
+
 ##### 3.0.0 (2025-04-11)
 * Typo for nonce variable has been fixed.
 
