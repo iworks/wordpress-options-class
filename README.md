@@ -6,6 +6,10 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 3.0.2 (2025-05-21)
+* Updated changelog formatting and structure for better readability.
+* Improved documentation for the changelog section.
+
 ##### 3.0.1 (2025-05-14)
 * Fixed security issues with HTML escaping in option descriptions and radio fields.
 * Added proper sanitization for option descriptions using `wp_kses_post()`.
@@ -211,4 +215,3 @@ Changelog
 
 * IMPROVMENT: add min/max attributes to filed type "number"
 * IMPROVMENT: add get_option_name method
-
