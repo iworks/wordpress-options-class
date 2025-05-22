@@ -6,6 +6,9 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 3.0.3 (2025-05-22)
+* Added new `get_pagehooks()` method to retrieve registered admin page hooks.
+
 ##### 3.0.2 (2025-05-21)
 * Updated changelog formatting and structure for better readability.
 * Improved documentation for the changelog section.

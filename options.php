@@ -3,16 +3,16 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 3.0.2
+Version: 3.0.3
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Copyright 2011-2025 Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License, version 2, as
+it under the terms of the GNU General Public License, version 3, as
 published by the Free Software Foundation.
 
 This program is distributed in the hope that it will be useful,
@@ -54,13 +54,6 @@ class iworks_options {
 	private $mode = 'plugin';
 
 	public $notices;
-
-	/**
-	 * self file
-	 *
-	 * @since 2.7.3
-	 */
-	private $__file__ = __FILE__;
 
 	/**
 	 * call from plugin
@@ -2631,4 +2624,19 @@ class iworks_options {
 			)
 		);
 	}
+
+	/**
+	 * Get the array of registered page hooks
+	 *
+	 * Retrieves all registered admin page hooks that have been added through this class.
+	 *
+	 * @since 3.0.3
+	 *
+	 * @return array Associative array of page hooks where keys are page slugs
+	 *              and values are the corresponding WordPress hook suffixes.
+	 */
+	public function get_pagehooks() {
+		return $this->pagehooks;
+	}
 }
+
