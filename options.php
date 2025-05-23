@@ -755,7 +755,7 @@ class iworks_options {
 					}
 					$option['options'] = apply_filters( $filter_name . '_data', $option['options'], $option_name, $option_value );
 					$select            = apply_filters( $filter_name . '_content', null, $option['options'], $html_element_name, $option_name, $option_value );
-					$select            = apply_filters( 'iworks_options_' . $option_name . '_content', null, $option['options'], $html_element_name, $option_name, $option_value );
+					$select            = apply_filters( 'iworks_options_' . $option_name . '_content', $select, $option['options'], $html_element_name, $option_name, $option_value );
 					if ( empty( $select ) ) {
 						foreach ( $option['options'] as $key => $value ) {
 							$disabled = '';
