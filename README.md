@@ -7,7 +7,11 @@ Changelog
 ---------
 
 ##### 3.0.6 (2025-05-27)
-* Refacoring of `add_menu_page()` and `add_submenu_page()` functions usage.
+* **Admin**: Refactored menu page registration using WordPress best practices for `add_menu_page()` and `add_submenu_page()`.
+* **Security**: Enhanced input validation by adding `button` tag with essential attributes to `wp_kses` allowed HTML tags.
+* **Security**: Added `rel` attribute to allowed `input` attributes in `wp_kses` for better security and compatibility.
+* **i18n**: Fixed textdomain from 'IWORKS_OPTIONS_TEXT_DOMAIN' to 'IWORKS_OPTIONS_TEXTDOMAIN' for consistent translation handling.
+* **Settings**: Added experimental features section with toggle switch, description field, and screenshot uploads for PWA preview.
 
 ##### 3.0.5 (2025-05-26)
 * Fixed issue for call the `add_submenu_page()` function. [#5](https://github.com/iworks/wordpress-options-class/issues/5)

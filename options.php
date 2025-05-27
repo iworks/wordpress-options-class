@@ -173,7 +173,7 @@ class iworks_options {
 					'position'   => 10,
 					'icon_url'   => null,
 					'parent'     => null,
-					'page_title' => esc_html__( 'No Page Title', 'IWORKS_OPTIONS_TEXT_DOMAIN' ),
+					'page_title' => esc_html__( 'No Page Title', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
 				)
 			);
 			/**
@@ -383,8 +383,8 @@ class iworks_options {
 				}
 			}
 			/**
-				* add default type
-				*/
+			 * add default type
+			 */
 			if ( ! array_key_exists( 'type', $option ) ) {
 				$option['type'] = 'text';
 			}
@@ -2556,6 +2556,47 @@ class iworks_options {
 				'popovertarget'       => true,
 				'popovertargetaction' => true,
 				'readonly'            => true,
+				'rel'                 => true,
+				'required'            => true,
+				'size'                => true,
+				'src'                 => true,
+				'step'                => true,
+				'type'                => true,
+				'value'               => true,
+				'width'               => true,
+			),
+			'button'   => array(
+				'accept'              => true,
+				'alt'                 => true,
+				'aria-*'              => true,
+				'autocomplete'        => true,
+				'autofocus'           => true,
+				'checked'             => true,
+				'class'               => true,
+				'data-*'              => true,
+				'dirname'             => true,
+				'disabled'            => true,
+				'form'                => true,
+				'formaction'          => true,
+				'formenctype'         => true,
+				'formmethod'          => true,
+				'formnovalidate'      => true,
+				'formtarget'          => true,
+				'height'              => true,
+				'id'                  => true,
+				'list'                => true,
+				'max'                 => true,
+				'maxlength'           => true,
+				'min'                 => true,
+				'minlength'           => true,
+				'multiple'            => true,
+				'name'                => true,
+				'pattern'             => true,
+				'placeholder'         => true,
+				'popovertarget'       => true,
+				'popovertargetaction' => true,
+				'readonly'            => true,
+				'rel'                 => true,
 				'required'            => true,
 				'size'                => true,
 				'src'                 => true,
