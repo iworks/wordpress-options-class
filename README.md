@@ -6,7 +6,10 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
-##### 3.0.4 (2025-05-26)
+##### 3.0.6 (2025-05-27)
+* Refacoring of `add_menu_page()` and `add_submenu_page()` functions usage.
+
+##### 3.0.5 (2025-05-26)
 * Fixed issue for call the `add_submenu_page()` function. [#5](https://github.com/iworks/wordpress-options-class/issues/5)
 
 ##### 3.0.4 (2025-05-23)

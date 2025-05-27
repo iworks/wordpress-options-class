@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 3.0.5
+Version: 3.0.6
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv3 or later
@@ -74,7 +74,7 @@ class iworks_options {
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '3.0.5';
+		$this->version              = '3.0.6';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -148,78 +148,97 @@ class iworks_options {
 			$pages = $data['pages'] + $pages;
 		}
 		foreach ( $pages as $key => $data ) {
-			$keys_to_sanitize = array( 'menu', 'parent' );
-			foreach ( $keys_to_sanitize as $key_to_sanitize ) {
-				if ( ! array_key_exists( $key_to_sanitize, $data ) ) {
-					$data[ $key_to_sanitize ] = '';
-				}
+			/**
+			 * Parse and sanitize admin menu arguments.
+			 *
+			 * @since 1.0.0
+			 *
+			 * @param array $data {
+			 *     Array of menu page arguments.
+			 *
+			 *     @type string $menu         The menu type. Default 'top_level'.
+			 *     @type string $capability   The capability required for this menu. Default 'manage_options'.
+			 *     @type int    $position     The position in the menu order. Default 10.
+			 *     @type string $icon_url     The URL to the icon to be used for this menu. Default null.
+			 *     @type string $parent       The parent menu slug. Default null for top-level menu.
+			 *     @type string $page_title   The text to be displayed in the title tags of the page.
+			 *                               Default 'No Page Title'.
+			 * }
+			 */
+			$data = wp_parse_args(
+				$data,
+				array(
+					'menu'       => 'top_level',
+					'capability' => 'manage_options',
+					'position'   => 10,
+					'icon_url'   => null,
+					'parent'     => null,
+					'page_title' => esc_html__( 'No Page Title', 'IWORKS_OPTIONS_TEXT_DOMAIN' ),
+				)
+			);
+			/**
+			 * Check callback
+			 */
+			$callback = array( $this, 'show_page' );
+			if ( isset( $data['show_page_callback'] ) && is_callable( $data['show_page_callback'] ) ) {
+				$callback = $data['show_page_callback'];
 			}
-			if ( 'submenu' == $data['menu'] ) {
-				if ( ! empty( $data['parent'] ) ) {
-					/**
-					 * Check callback
-					 */
-					$callback = array( $this, 'show_page' );
-					if ( isset( $data['show_page_callback'] ) && is_callable( $data['show_page_callback'] ) ) {
-						$callback = $data['show_page_callback'];
-					}
-					if ( isset( $data['set_callback_to_null'] ) && $data['set_callback_to_null'] ) {
-						$callback = null;
-					}
-					/**
-					 * add submenu
-					 */
-					$this->pagehooks[ $key ] = add_submenu_page(
-						$data['parent'],
+			if ( isset( $data['set_callback_to_null'] ) && $data['set_callback_to_null'] ) {
+				$callback = null;
+			}
+			/**
+			 * Add menu or submenu
+			 */
+			switch ( $data['menu'] ) {
+				case 'comments':
+				case 'dashboard':
+				case 'links':
+				case 'management':
+				case 'media':
+				case 'options':
+				case 'pages':
+				case 'plugins':
+				case 'posts':
+				case 'posts':
+				case 'theme':
+				case 'users':
+					$function                = sprintf( 'add_%s_page', $data['menu'] );
+					$this->pagehooks[ $key ] = $function(
 						$data['page_title'],
 						isset( $data['menu_title'] ) ? $data['menu_title'] : $data['page_title'],
 						apply_filters( 'iworks_options_capability', 'manage_options', 'settings' ),
-						isset( $data['menu_slug'] ) ? $data['menu_slug'] : $this->get_option_name( $key ),
-						$callback,
-						null
+						$this->get_option_name( $key ),
+						apply_filters( 'iworks_options_callback', $callback, $data, $this->options ),
+						isset( $data['position'] ) ? floatval( $data['position'] ) : null
 					);
 					add_action( 'load-' . $this->pagehooks[ $key ], array( $this, 'load_page' ) );
-				}
-			} elseif ( isset( $data['page_title'] ) ) {
-				switch ( $data['menu'] ) {
-					case 'comments':
-					case 'dashboard':
-					case 'links':
-					case 'management':
-					case 'media':
-					case 'options':
-					case 'pages':
-					case 'plugins':
-					case 'posts':
-					case 'posts':
-					case 'theme':
-					case 'users':
-						$function                = sprintf( 'add_%s_page', $data['menu'] );
-						$this->pagehooks[ $key ] = $function(
+					break;
+				case 'top_level':
+					$this->pagehooks[ $key ] = add_menu_page(
+						$data['page_title'],
+						isset( $data['menu_title'] ) ? $data['menu_title'] : $data['page_title'],
+						apply_filters( 'iworks_options_capability', 'manage_options', 'settings' ),
+						$this->get_option_name( $key ),
+						apply_filters( 'iworks_options_callback', $callback, $data, $this->options ),
+						apply_filters( 'iworks_options_icon_url', $data['icon_url'], $data ),
+						isset( $data['position'] ) ? floatval( $data['position'] ) : null
+					);
+					add_action( 'load-' . $this->pagehooks[ $key ], array( $this, 'load_page' ) );
+					break;
+				default:
+					if ( ! empty( $data['parent'] ) ) {
+						$this->pagehooks[ $key ] = add_submenu_page(
+							$data['parent'],
 							$data['page_title'],
 							isset( $data['menu_title'] ) ? $data['menu_title'] : $data['page_title'],
 							apply_filters( 'iworks_options_capability', 'manage_options', 'settings' ),
-							$this->get_option_name( $key ),
-							isset( $data['show_page_callback'] ) ? $data['show_page_callback'] : array( $this, 'show_page' ),
+							isset( $data['menu_slug'] ) ? $data['menu_slug'] : $this->get_option_name( $key ),
+							apply_filters( 'iworks_options_callback', $callback, $data, $this->options ),
 							isset( $data['position'] ) ? floatval( $data['position'] ) : null
 						);
 						add_action( 'load-' . $this->pagehooks[ $key ], array( $this, 'load_page' ) );
-						break;
-					default:
-						if ( isset( $data['parent'] ) ) {
-							$this->pagehooks[ $key ] = add_submenu_page(
-								$data['parent'],
-								$data['page_title'],
-								isset( $data['menu_title'] ) ? $data['menu_title'] : $data['page_title'],
-								apply_filters( 'iworks_options_capability', 'manage_options', 'settings' ),
-								$this->get_option_name( $key ),
-								isset( $data['show_page_callback'] ) ? $data['show_page_callback'] : array( $this, 'show_page' ),
-								isset( $data['position'] ) ? floatval( $data['position'] ) : null
-							);
-							add_action( 'load-' . $this->pagehooks[ $key ], array( $this, 'load_page' ) );
-						}
-						break;
-				}
+					}
+					break;
 			}
 		}
 	}
