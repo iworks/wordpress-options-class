@@ -6,6 +6,10 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 3.0.7 (2025-05-28)
+* **Security**: Added `iframe` tag to allowed `wp_kses` allowed HTML tags.
+* **Security**: Added `noscript` tag to allowed `wp_kses` allowed HTML tags.
+
 ##### 3.0.6 (2025-05-27)
 * **Admin**: Refactored menu page registration using WordPress best practices for `add_menu_page()` and `add_submenu_page()`.
 * **Security**: Enhanced input validation by adding `button` tag with essential attributes to `wp_kses` allowed HTML tags.
