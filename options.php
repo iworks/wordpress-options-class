@@ -1827,6 +1827,8 @@ class iworks_options {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @since 3.0.8 handle multiple select
+	 *
 	 * @param string $name  The name.
 	 * @param mixed  $value The value.
 	 * @param array  $args  The arguments.
@@ -1855,18 +1857,41 @@ class iworks_options {
 		if ( empty( $options ) && ! empty( $value ) ) {
 			$options[ $value['value'] ] = $value['label'];
 		}
+		/**
+		 * value to check
+		 */
 		$value_to_check = is_array( $value ) && isset( $value['value'] ) ? $value['value'] : $value;
-		$content        = sprintf(
-			'<select type="%s" name="%s" %s >',
+		/**
+		 * is multiple?
+		 */
+		$multiple = false;
+		if ( isset( $args['multiple'] ) && $args['multiple'] ) {
+			$multiple = true;
+			if ( ! is_array( $value_to_check ) ) {
+				$value_to_check = array( $value_to_check );
+			}
+		}
+		$content = sprintf(
+			'<select type="%s" name="%s" %s>',
 			esc_attr( $type ),
 			esc_attr( $name ),
 			$this->build_field_attributes( $args )
 		);
 		foreach ( $options as $val => $label ) {
+			$checked = '';
+			if ( $multiple ) {
+				if ( is_array( $value_to_check ) && in_array( $val, $value_to_check ) ) {
+					$checked = ' selected';
+				}
+			} else {
+				if ( $val === $value_to_check ) {
+					$checked = ' selected';
+				}
+			}
 			$content .= sprintf(
-				'<option value="%s" %s>%s</option>',
+				'<option value="%s"%s>%s</option>',
 				esc_attr( $val ),
-				selected( $val, $value_to_check, false ),
+				$checked,
 				esc_html( $label )
 			);
 		}

@@ -6,6 +6,9 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 3.0.8 (2025-08-19)
+* **Enhancement**: Added `multiple` support for select field.
+
 ##### 3.0.7 (2025-05-28)
 * **Security**: Added `iframe` tag to allowed `wp_kses` allowed HTML tags.
 * **Security**: Added `noscript` tag to allowed `wp_kses` allowed HTML tags.
