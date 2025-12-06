@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: https://github.com/iworks/wordpress-options-class
 Description: Option class to manage options.
-Version: 3.0.8
+Version: 3.0.9
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv3 or later
@@ -73,7 +73,7 @@ class iworks_options {
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '3.0.8';
+		$this->version              = '3.0.9';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -1954,24 +1954,6 @@ class iworks_options {
 	}
 
 	/**
-	 * Checkbox HTML element.
-	 *
-	 * @since 2.6.4
-	 *
-	 * @param string $name  The name.
-	 * @param mixed  $value The value.
-	 * @param array  $args  The arguments.
-	 *
-	 * @return string The checkbox.
-	 */
-	private function checkbox( $name, $value = '', $args = array() ) {
-		if ( ! empty( $value ) ) {
-			$args['checked'] = 'checked';
-		}
-		return $this->input( $name, $value, $args, __FUNCTION__ );
-	}
-
-	/**
 	 * Switch button element (based on checkbox field).
 	 *
 	 * @since 2.6.4
@@ -1984,100 +1966,6 @@ class iworks_options {
 	 */
 	private function switch_button( $name, $value = '', $args = array() ) {
 		return $this->checkbox( $name, $value, $args );
-	}
-
-	/**
-	 * Text input element.
-	 *
-	 * @since 2.6.4
-	 *
-	 * @param string $name  The name.
-	 * @param mixed  $value The value.
-	 * @param array  $args  The arguments.
-	 *
-	 * @return string The text input.
-	 */
-	private function text( $name, $value = '', $args = array() ) {
-		return $this->input( $name, $value, $args, __FUNCTION__ );
-	}
-
-	/**
-	 * Number input element.
-	 *
-	 * @since 2.6.4
-	 *
-	 * @param string $name  The name.
-	 * @param mixed  $value The value.
-	 * @param array  $args  The arguments.
-	 *
-	 * @return string The number input.
-	 */
-	private function number( $name, $value = '', $args = array() ) {
-		return $this->input( $name, $value, $args, __FUNCTION__ );
-	}
-
-	/**
-	 * Button input element.
-	 *
-	 * @since 2.6.4
-	 *
-	 * @param string $name  The name.
-	 * @param mixed  $value The value.
-	 * @param array  $args  The arguments.
-	 *
-	 * @return string The button input.
-	 */
-	private function button( $name, $value = '', $args = array() ) {
-		return $this->input( $name, $value, $args, __FUNCTION__ );
-	}
-
-	/**
-	 * Submit input element.
-	 *
-	 * @since 2.6.4
-	 *
-	 * @param string $name  The name.
-	 * @param mixed  $value The value.
-	 * @param array  $args  The arguments.
-	 *
-	 * @return string The submit input.
-	 */
-	private function submit( $name, $value = '', $args = array() ) {
-		return $this->input( $name, $value, $args, __FUNCTION__ );
-	}
-
-	/**
-	 * Hidden input element.
-	 *
-	 * @since 2.6.4
-	 *
-	 * @param string $name  The name.
-	 * @param mixed  $value The value.
-	 * @param array  $args  The arguments.
-	 *
-	 * @return string The hidden input.
-	 */
-	private function hidden( $name, $value = '', $args = array() ) {
-		return $this->input( $name, $value, $args, __FUNCTION__ );
-	}
-
-	/**
-	 * Date input element.
-	 *
-	 * @since 2.6.4
-	 *
-	 * @param string $name  The name.
-	 * @param mixed  $value The value.
-	 * @param array  $args  The arguments.
-	 *
-	 * @return string The date input.
-	 */
-	private function date( $name, $value = '', $args = array() ) {
-		if ( ! isset( $args['class'] ) ) {
-			$args['class'] = array();
-		}
-		$args['class'][] = 'datepicker';
-		return $this->input( $name, $value, $args );
 	}
 
 	/**
@@ -2126,52 +2014,6 @@ class iworks_options {
 			$data_string,
 			$value
 		);
-	}
-
-	/**
-	 * Radio input element.
-	 *
-	 * @since 2.6.4
-	 *
-	 * @param string $name  The name.
-	 * @param mixed  $value The value.
-	 * @param array  $args  The arguments.
-	 *
-	 * @return string The radio input.
-	 */
-	private function radio( $name, $value = '', $args = array() ) {
-		$radio   = '';
-		$options = $args['options'];
-		unset( $args['options'] );
-		/**
-		 * default value
-		 */
-		if ( isset( $args['default'] ) && '' == $value ) {
-			$value = $args['default'];
-		}
-		$i = 0;
-		foreach ( $options as $option_value => $input ) {
-			$id     = sprintf( '%s%d', $name, $i++ );
-			$radio .= sprintf(
-				'<li class="%s"><label for="%s"><input type="radio" name="%s" value="%s"%s id="%s"/> %s</label>',
-				esc_attr( sanitize_title( $value ) ),
-				esc_attr( $id ),
-				esc_attr( $name ),
-				esc_attr( $option_value ),
-				checked( $option_value, $value, false ),
-				esc_attr( $id ),
-				esc_html( is_string( $input ) ? $input : $input['label'] )
-			);
-			if ( isset( $input['description'] ) ) {
-				$radio .= '<br>';
-				$radio .= $this->description( '', '', array( 'description' => wp_kses_post( $input['description'] ) ) );
-			}
-			$radio .= '</li>';
-		}
-		if ( $radio ) {
-			$radio = sprintf( '<ul>%s</ul>', $radio );
-		}
-		return $radio;
 	}
 
 	/**
@@ -2755,5 +2597,269 @@ class iworks_options {
 	public function get_pagehooks() {
 		return $this->pagehooks;
 	}
+
+
+	/**
+	 * HTML INPUT ELEMENTS
+	 */
+
+	/**
+	 * Button input element.
+	 *
+	 * @since 2.6.4
+	 *
+	 * @param string $name  The name.
+	 * @param mixed  $value The value.
+	 * @param array  $args  The arguments.
+	 *
+	 * @return string The button input.
+	 */
+	private function button( $name, $value = '', $args = array() ) {
+		return $this->input( $name, $value, $args, __FUNCTION__ );
+	}
+
+	/**
+	 * Checkbox HTML element.
+	 *
+	 * @since 2.6.4
+	 *
+	 * @param string $name  The name.
+	 * @param mixed  $value The value.
+	 * @param array  $args  The arguments.
+	 *
+	 * @return string The checkbox.
+	 */
+	private function checkbox( $name, $value = '', $args = array() ) {
+		if ( ! empty( $value ) ) {
+			$args['checked'] = 'checked';
+		}
+		return $this->input( $name, $value, $args, __FUNCTION__ );
+	}
+
+	/**
+	 * Input type="color" element.
+	 *
+	 * @since 3.0.9
+	 *
+	 * @param string $name  The name.
+	 * @param mixed  $value The value.
+	 * @param array  $args  The arguments.
+	 *
+	 * @return string The number input.
+	 */
+	private function color( $name, $value = '', $args = array() ) {
+		return $this->input( $name, $value, $args, 'text' );
+		return $this->input( $name, $value, $args, __FUNCTION__ );
+	}
+
+	/**
+	 * Date input element.
+	 *
+	 * @since 2.6.4
+	 *
+	 * @param string $name  The name.
+	 * @param mixed  $value The value.
+	 * @param array  $args  The arguments.
+	 *
+	 * @return string The date input.
+	 */
+	private function date( $name, $value = '', $args = array() ) {
+		if ( ! isset( $args['class'] ) ) {
+			$args['class'] = array();
+		}
+		$args['class'][] = 'datepicker';
+		return $this->input( $name, $value, $args );
+	}
+
+	/**
+	 * Input type="email" element.
+	 *
+	 * @since 3.0.9
+	 *
+	 * @param string $name  The name.
+	 * @param mixed  $value The value.
+	 * @param array  $args  The arguments.
+	 *
+	 * @return string The number input.
+	 */
+	private function email( $name, $value = '', $args = array() ) {
+		return $this->input( $name, $value, $args, 'text' );
+		return $this->input( $name, $value, $args, __FUNCTION__ );
+	}
+
+	/**
+	 * Hidden input element.
+	 *
+	 * @since 2.6.4
+	 *
+	 * @param string $name  The name.
+	 * @param mixed  $value The value.
+	 * @param array  $args  The arguments.
+	 *
+	 * @return string The hidden input.
+	 */
+	private function hidden( $name, $value = '', $args = array() ) {
+		return $this->input( $name, $value, $args, __FUNCTION__ );
+	}
+
+	/**
+	 * Input type="month" element.
+	 *
+	 * @since 3.0.9
+	 *
+	 * @param string $name  The name.
+	 * @param mixed  $value The value.
+	 * @param array  $args  The arguments.
+	 *
+	 * @return string The number input.
+	 */
+	private function month( $name, $value = '', $args = array() ) {
+		return $this->input( $name, $value, $args, 'text' );
+		return $this->input( $name, $value, $args, __FUNCTION__ );
+	}
+
+	/**
+	 * Number input element.
+	 *
+	 * @since 2.6.4
+	 *
+	 * @param string $name  The name.
+	 * @param mixed  $value The value.
+	 * @param array  $args  The arguments.
+	 *
+	 * @return string The number input.
+	 */
+	private function number( $name, $value = '', $args = array() ) {
+		return $this->input( $name, $value, $args, 'text' );
+		return $this->input( $name, $value, $args, __FUNCTION__ );
+	}
+
+	/**
+	 * Radio input element.
+	 *
+	 * @since 2.6.4
+	 *
+	 * @param string $name  The name.
+	 * @param mixed  $value The value.
+	 * @param array  $args  The arguments.
+	 *
+	 * @return string The radio input.
+	 */
+	private function radio( $name, $value = '', $args = array() ) {
+		$radio   = '';
+		$options = $args['options'];
+		unset( $args['options'] );
+		/**
+		 * default value
+		 */
+		if ( isset( $args['default'] ) && '' == $value ) {
+			$value = $args['default'];
+		}
+		$i = 0;
+		foreach ( $options as $option_value => $input ) {
+			$id     = sprintf( '%s%d', $name, $i++ );
+			$radio .= sprintf(
+				'<li class="%s"><label for="%s"><input type="radio" name="%s" value="%s"%s id="%s"/> %s</label>',
+				esc_attr( sanitize_title( $value ) ),
+				esc_attr( $id ),
+				esc_attr( $name ),
+				esc_attr( $option_value ),
+				checked( $option_value, $value, false ),
+				esc_attr( $id ),
+				esc_html( is_string( $input ) ? $input : $input['label'] )
+			);
+			if ( isset( $input['description'] ) ) {
+				$radio .= '<br>';
+				$radio .= $this->description( '', '', array( 'description' => wp_kses_post( $input['description'] ) ) );
+			}
+			$radio .= '</li>';
+		}
+		if ( $radio ) {
+			$radio = sprintf( '<ul>%s</ul>', $radio );
+		}
+		return $radio;
+	}
+
+	/**
+	 * Submit input element.
+	 *
+	 * @since 2.6.4
+	 *
+	 * @param string $name  The name.
+	 * @param mixed  $value The value.
+	 * @param array  $args  The arguments.
+	 *
+	 * @return string The submit input.
+	 */
+	private function submit( $name, $value = '', $args = array() ) {
+		return $this->input( $name, $value, $args, __FUNCTION__ );
+	}
+
+	/**
+	 * Input type="tel" element.
+	 *
+	 * @since 3.0.9
+	 *
+	 * @param string $name  The name.
+	 * @param mixed  $value The value.
+	 * @param array  $args  The arguments.
+	 *
+	 * @return string The number input.
+	 */
+	private function tel( $name, $value = '', $args = array() ) {
+		return $this->input( $name, $value, $args, 'text' );
+		return $this->input( $name, $value, $args, __FUNCTION__ );
+	}
+
+	/**
+	 * Text input element.
+	 *
+	 * @since 2.6.4
+	 *
+	 * @param string $name  The name.
+	 * @param mixed  $value The value.
+	 * @param array  $args  The arguments.
+	 *
+	 * @return string The text input.
+	 */
+	private function text( $name, $value = '', $args = array() ) {
+		return $this->input( $name, $value, $args, __FUNCTION__ );
+	}
+
+	/**
+	 * Input type="url" element.
+	 *
+	 * @since 3.0.9
+	 *
+	 * @param string $name  The name.
+	 * @param mixed  $value The value.
+	 * @param array  $args  The arguments.
+	 *
+	 * @return string The number input.
+	 */
+	private function url( $name, $value = '', $args = array() ) {
+		return $this->input( $name, $value, $args, 'text' );
+		return $this->input( $name, $value, $args, __FUNCTION__ );
+	}
+
+	/**
+	 * Input type="week" element.
+	 *
+	 * @since 3.0.9
+	 *
+	 * @param string $name  The name.
+	 * @param mixed  $value The value.
+	 * @param array  $args  The arguments.
+	 *
+	 * @return string The number input.
+	 */
+	private function week( $name, $value = '', $args = array() ) {
+		return $this->input( $name, $value, $args, 'text' );
+		return $this->input( $name, $value, $args, __FUNCTION__ );
+	}
+
+	/**
+	 * @TODO: datetime-local, file, password, range, reset, search, time
+	 */
 }
 

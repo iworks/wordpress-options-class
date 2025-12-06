@@ -6,6 +6,9 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 3.0.9 (2025-12-06)
+* Added HTML fields: color, email, month, tel, url & week.
+
 ##### 3.0.8 (2025-08-19)
 * **Enhancement**: Added `multiple` support for select field.
 
