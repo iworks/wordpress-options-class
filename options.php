@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: https://github.com/iworks/wordpress-options-class
 Description: Option class to manage options.
-Version: 3.0.9
+Version: 3.1.0
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv3 or later
@@ -73,7 +73,7 @@ class iworks_options {
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '3.0.9';
+		$this->version              = '3.1.0';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -1831,11 +1831,10 @@ class iworks_options {
 	 * @param string $name  The name.
 	 * @param mixed  $value The value.
 	 * @param array  $args  The arguments.
-	 * @param string $type  The type.
 	 *
 	 * @return void
 	 */
-	private function select( $name, $value = '', $args = array(), $type = 'text' ) {
+	private function select( $name, $value = '', $args = array() ) {
 		/**
 		 * default value
 		 */
@@ -1871,8 +1870,7 @@ class iworks_options {
 			}
 		}
 		$content = sprintf(
-			'<select type="%s" name="%s" %s>',
-			esc_attr( $type ),
+			'<select name="%s" %s>',
 			esc_attr( $name ),
 			$this->build_field_attributes( $args )
 		);
@@ -2807,7 +2805,6 @@ class iworks_options {
 	 * @return string The number input.
 	 */
 	private function tel( $name, $value = '', $args = array() ) {
-		return $this->input( $name, $value, $args, 'text' );
 		return $this->input( $name, $value, $args, __FUNCTION__ );
 	}
 
@@ -2838,7 +2835,6 @@ class iworks_options {
 	 * @return string The number input.
 	 */
 	private function url( $name, $value = '', $args = array() ) {
-		return $this->input( $name, $value, $args, 'text' );
 		return $this->input( $name, $value, $args, __FUNCTION__ );
 	}
 
@@ -2854,7 +2850,6 @@ class iworks_options {
 	 * @return string The number input.
 	 */
 	private function week( $name, $value = '', $args = array() ) {
-		return $this->input( $name, $value, $args, 'text' );
 		return $this->input( $name, $value, $args, __FUNCTION__ );
 	}
 
