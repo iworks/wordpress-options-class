@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: https://github.com/iworks/wordpress-options-class
 Description: Option class to manage options.
-Version: 3.1.0
+Version: 3.0.9
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv3 or later
@@ -73,7 +73,7 @@ class iworks_options {
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '3.1.0';
+		$this->version              = '3.0.9';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -2646,7 +2646,6 @@ class iworks_options {
 	 * @return string The number input.
 	 */
 	private function color( $name, $value = '', $args = array() ) {
-		return $this->input( $name, $value, $args, 'text' );
 		return $this->input( $name, $value, $args, __FUNCTION__ );
 	}
 
@@ -2681,7 +2680,6 @@ class iworks_options {
 	 * @return string The number input.
 	 */
 	private function email( $name, $value = '', $args = array() ) {
-		return $this->input( $name, $value, $args, 'text' );
 		return $this->input( $name, $value, $args, __FUNCTION__ );
 	}
 
@@ -2712,7 +2710,6 @@ class iworks_options {
 	 * @return string The number input.
 	 */
 	private function month( $name, $value = '', $args = array() ) {
-		return $this->input( $name, $value, $args, 'text' );
 		return $this->input( $name, $value, $args, __FUNCTION__ );
 	}
 
@@ -2728,7 +2725,6 @@ class iworks_options {
 	 * @return string The number input.
 	 */
 	private function number( $name, $value = '', $args = array() ) {
-		return $this->input( $name, $value, $args, 'text' );
 		return $this->input( $name, $value, $args, __FUNCTION__ );
 	}
 
