@@ -3,13 +3,13 @@
 Class Name: iWorks Options
 Class URI: https://github.com/iworks/wordpress-options-class
 Description: Option class to manage options.
-Version: 3.0.9
+Version: 3.1.0
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Copyright 2011-2025 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2011-2026 Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 3, as
@@ -68,12 +68,19 @@ class iworks_options {
 	 */
 	private $files = array();
 
+	/**
+	 * Logger instance.
+	 *
+	 * @since 3.1.0
+	 */
+	private $logger;
+
 	public function __construct() {
 		/**
 		 * basic setup
 		 */
 		$this->notices              = array();
-		$this->version              = '3.0.9';
+		$this->version              = '3.1.0';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -89,6 +96,11 @@ class iworks_options {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'admin_notices', array( &$this, 'admin_notices' ) );
 		add_filter( 'screen_layout_columns', array( $this, 'screen_layout_columns' ), 10, 2 );
+		/**
+		 * include logger class
+		 */
+		require_once plugin_dir_path( __FILE__ ) . 'includes/class-iworks-options-logger.php';
+		$this->logger = new iworks_options_logger( $this );
 	}
 
 	/**
@@ -113,6 +125,17 @@ class iworks_options {
 		if ( preg_match( '/^(plugin|theme)$/', $mode ) ) {
 			$this->mode = $mode;
 		}
+	}
+
+	/**
+	 * Get option class mode.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @return string Working mode, possible values "plugin", "theme".
+	 */
+	public function get_mode() {
+		return $this->mode;
 	}
 
 	/**
@@ -262,6 +285,17 @@ class iworks_options {
 	 */
 	public function set_option_function_name( $option_function_name ) {
 		$this->option_function_name = $option_function_name;
+	}
+
+	/**
+	 * Get the option function name.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @return string The option function name.
+	 */
+	public function get_option_function_name() {
+		return $this->option_function_name;
 	}
 
 	/**
@@ -1089,7 +1123,14 @@ class iworks_options {
 			$args = array(
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
+				'logger'            => 'no',
 			);
+			/**
+			 * logger
+			 */
+			if ( isset( $option['logger'] ) && $option['logger'] ) {
+				$args['logger'] = $option['logger'];
+			}
 			/**
 			 * set type
 			 */
