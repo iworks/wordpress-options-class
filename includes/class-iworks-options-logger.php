@@ -93,14 +93,13 @@ class iworks_options_logger {
         if ( $old_value === $new_value ) {
             return;
         }
-        $this->log(
+        $this->simple_history_logger_helper(
             __( 'Option "{option_name}" has been updated. From "{old_value}" to "{new_value}".', 'opi-security-boost' ),
             array(
                 'option_name' => $option_name,
                 'old_value'   => $old_value,
                 'new_value'   => $new_value,
-            ),
-            $this->loggers[ $option_name ]
+            )
         );
     }
     

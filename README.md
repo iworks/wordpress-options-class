@@ -6,6 +6,9 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 3.1.1 (2026-04-17)
+* Removed call of non existed method.
+
 ##### 3.1.0 (2026-04-16)
 * Added `get_mode()` method.
 * Added `get_option_function_name()` method.
