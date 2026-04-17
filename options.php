@@ -1,28 +1,31 @@
 <?php
-/*
-Class Name: iWorks Options
-Class URI: https://github.com/iworks/wordpress-options-class
-Description: Option class to manage options.
-Version: 3.1.1
-Author: Marcin Pietrzak
-Author URI: http://iworks.pl/
-License: GPLv3 or later
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
-
-Copyright 2011-2026 Marcin Pietrzak (marcin@iworks.pl)
-
-this program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License, version 3, as
-published by the Free Software Foundation.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+/**
+ * iWorks Options Class.
+ *
+ * A comprehensive options management class for WordPress plugins and themes.
+ * Provides a flexible framework for creating admin pages, settings fields,
+ * and managing plugin/theme configuration options.
+ *
+ * @package Iworks\Options
+ * @version 3.1.0
+ * @author  Marcin Pietrzak <marcin@iworks.pl>
+ * @link    https://github.com/iworks/wordpress-options-class
+ * @license GPL-3.0-or-later
+ *
+ * Copyright 2011-2026 Marcin Pietrzak (marcin@iworks.pl)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 3, as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 defined( 'ABSPATH' ) || exit; // Exit if accessed directly
@@ -34,71 +37,120 @@ if ( class_exists( 'iworks_options' ) ) {
 class iworks_options {
 
 	/**
-	 * Core options.
+	 * Plugin version.
 	 *
 	 * @since 1.0.0
+	 * @var string
+	 */
+	private string $version = '3.1.0';
+
+	/**
+	 * Core options array.
+	 *
+	 * @since 1.0.0
+	 * @var array
 	 */
 	private array $options;
-	private $option_function_name;
-	private $option_group;
-	private $option_prefix;
-	private $version;
-	private $pagehooks        = array();
-	private $scripts_enqueued = array();
+
 	/**
-	 * Controll class mode.
+	 * Option function name.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	private string $option_function_name = '';
+
+	/**
+	 * Option group name.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	private string $option_group = 'index';
+
+	/**
+	 * Option prefix.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	private string $option_prefix = '';
+
+	/**
+	 * Registered page hooks.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	private array $pagehooks = array();
+
+	/**
+	 * Enqueued scripts.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	private array $scripts_enqueued = array();
+	/**
+	 * Control class mode.
 	 *
 	 * @since 2.6.5
+	 * @var string
 	 */
-	private $mode = 'plugin';
-
-	public $notices;
+	private string $mode = 'plugin';
 
 	/**
-	 * call from plugin
+	 * Admin notices array.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	public array $notices = array();
+
+	/**
+	 * Plugin identifier.
 	 *
 	 * @since 2.7.3
+	 * @var string
 	 */
-	private $plugin = '-not-set-';
+	private string $plugin = '-not-set-';
 
 	/**
-	 * Files to enqueue
+	 * Files to enqueue.
 	 *
 	 * @since 2.8.4
+	 * @var array
 	 */
-	private $files = array();
+	private array $files = array();
 
 	/**
 	 * Logger instance.
 	 *
 	 * @since 3.1.0
+	 * @var iworks_options_logger
 	 */
-	private $logger;
+	private iworks_options_logger $logger;
 
+	/**
+	 * Constructor.
+	 *
+	 * Sets up the options class with default values and registers hooks.
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
-		/**
-		 * basic setup
-		 */
-		$this->notices              = array();
-		$this->version              = '3.1.1';
-		$this->option_group         = 'index';
-		$this->option_function_name = null;
-		$this->option_prefix        = null;
-		/**
-		 * afer basic setup
-		 */
+
+		// Setup.
 		$this->files = $this->get_files();
-		/**
-		 * hooks
-		 */
+
+		// Register hooks.
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_styles' ), 0 );
 		add_action( 'admin_head', array( $this, 'admin_head' ) );
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-		add_action( 'admin_notices', array( &$this, 'admin_notices' ) );
+		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 		add_filter( 'screen_layout_columns', array( $this, 'screen_layout_columns' ), 10, 2 );
-		/**
-		 * include logger class
-		 */
+
+		// Include logger class.
 		require_once plugin_dir_path( __FILE__ ) . 'includes/class-iworks-options-logger.php';
 		$this->logger = new iworks_options_logger( $this );
 	}
@@ -107,8 +159,6 @@ class iworks_options {
 	 * Initialize the options class.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @return void
 	 */
 	public function init() {
 		$this->get_option_array();
@@ -139,11 +189,12 @@ class iworks_options {
 	}
 
 	/**
-	 * Get group
+	 * Get option group configuration.
 	 *
 	 * @since 2.6.7
 	 *
-	 * @param string $option_group Name of config group.
+	 * @param string|null $option_group Name of config group.
+	 * @return array Group configuration array.
 	 */
 	public function get_group( $option_group = null ) {
 		if ( null === $option_group ) {
@@ -156,8 +207,6 @@ class iworks_options {
 	 * Add admin menu.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @return void
 	 */
 	public function admin_menu() {
 		$data = $this->get_option_array();
@@ -1582,7 +1631,16 @@ class iworks_options {
 	}
 
 	/**
-	 * Helpers
+	 * Helper method to create page dropdown.
+	 *
+	 * Creates a WordPress page dropdown select element.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $name             Option name.
+	 * @param bool   $show_option_none Whether to show a "none" option. Default false.
+	 * @param string $post_type        Post type to show. Default 'page'.
+	 * @return string HTML dropdown markup.
 	 */
 	public function select_page_helper( $name, $show_option_none = false, $post_type = 'page' ) {
 		$args = array(
@@ -1595,6 +1653,18 @@ class iworks_options {
 		return wp_dropdown_pages( $args );
 	}
 
+	/**
+	 * Helper method to create category dropdown.
+	 *
+	 * Creates a WordPress category dropdown select element.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string     $name             Option name.
+	 * @param bool|null  $hide_empty       Whether to hide empty categories. Default null.
+	 * @param bool       $show_option_none Whether to show a "none" option. Default false.
+	 * @return string HTML dropdown markup.
+	 */
 	public function select_category_helper( $name, $hide_empty = null, $show_option_none = false ) {
 		$args = array(
 			'echo'         => false,
@@ -1660,9 +1730,15 @@ class iworks_options {
 		}
 		global $screen_layout_columns;
 		$data = array();
-		?>
-<div class="wrap iworks_options">
-	<h1><?php echo esc_html( $options['page_title'] ); ?></h1>
+		echo '<div class="wrap iworks_options">';
+		printf( '<h1>%s</h1>', esc_html( $options['page_title'] ) );
+		/**
+		 * Hook before form
+		 *
+		 * @since 3.1.0
+		 */
+		do_action( 'iworks/options/show_page/form/before', $this->get_option_function_name() );
+	?>
 	<form method="post" action="<?php echo esc_url( $url ); ?>" id="<?php echo esc_attr( $this->get_option_name( 'admin_index' ) ); ?>">
 		<?php wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false ); ?>
 		<?php wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false ); ?>
@@ -1681,16 +1757,34 @@ class iworks_options {
 			<div id="post-body" class="has-sidebar">
 				<div id="post-body-content" class="has-sidebar-content">
 		<?php
+		/**
+		 * Hook before settings fields
+		 *
+		 * @since 3.1.0
+		 */
+		do_action( 'iworks/options/show_page/settings_fields/before', $this->get_option_function_name() );
 		$this->settings_fields( $option_name );
 		$this->build_options( $option_name );
+		/**
+		 * Hook after build options
+		 *
+		 * @since 3.1.0
+		 */
+		do_action( 'iworks/options/show_page/build_options/after', $this->get_option_function_name() );
 		?>
 				</div>
 			</div>
 			<br class="clear"/>
 		</div>
 	</form>
-</div>
-		<?php
+	<?php
+		/**
+		 * Hook after form
+		 *
+		 * @since 3.1.0
+		 */
+		do_action( 'iworks/options/show_page/form/after', $this->get_option_function_name() );
+		echo '</div>';
 	}
 
 	/**
@@ -1851,6 +1945,16 @@ class iworks_options {
 		return sprintf( 'wrong type: %s', esc_html( $type ) );
 	}
 
+	/**
+	 * Build HTML attributes string from array.
+	 *
+	 * Converts an array of attributes to a properly formatted HTML attribute string.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $args Array of attributes.
+	 * @return string Formatted HTML attributes.
+	 */
 	private function build_field_attributes( $args ) {
 		$atts = '';
 		foreach ( $args as $key => $value ) {

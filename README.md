@@ -6,13 +6,16 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
-##### 3.1.1 (2026-04-17)
-* Removed call of non existed method.
-
-##### 3.1.0 (2026-04-16)
+##### 3.1.0 (2026-04-17)
 * Added `get_mode()` method.
 * Added `get_option_function_name()` method.
 * Added logger submodule with Simple History integration for option change tracking.
+* Added missing DocBook comments.
+* Added new action hooks triggered on options page rendering:
+  * `iworks/options/show_page/build_options/after`
+  * `iworks/options/show_page/form/after`
+  * `iworks/options/show_page/form/before`
+  * `iworks/options/show_page/settings_fields/before`
 * Removed `type` from `select` function.
 
 ##### 3.0.9 (2025-12-06)
