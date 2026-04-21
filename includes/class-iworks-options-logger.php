@@ -94,7 +94,7 @@ class iworks_options_logger {
             return;
         }
         $this->simple_history_logger_helper(
-            __( 'Option "{option_name}" has been updated. From "{old_value}" to "{new_value}".', 'opi-security-boost' ),
+            __( 'Option "{option_name}" has been updated. From "{old_value}" to "{new_value}".', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
             array(
                 'option_name' => $option_name,
                 'old_value'   => $old_value,
