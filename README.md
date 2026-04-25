@@ -9,7 +9,7 @@ Changelog
 ##### 3.1.0 (2026-04-17)
 * Added `get_mode()` method.
 * Added `get_option_function_name()` method.
-* Added logger submodule with Simple History integration for option change tracking.
+* Added logger submodule with [Simple History](https://wordpress.org/plugins/simple-history/) integration for option change tracking.
 * Added missing DocBook comments.
 * Added new action hooks triggered on options page rendering:
   * `iworks/options/show_page/build_options/after`
