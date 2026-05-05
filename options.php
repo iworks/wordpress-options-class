@@ -372,10 +372,6 @@ class iworks_options {
 			$option_group = $this->option_group;
 		}
 		$options = array();
-		if ( array_key_exists( $option_group, $options ) && ! empty( $options[ $option_group ] ) ) {
-			$options = apply_filters( $this->option_function_name, $this->options );
-			return $options[ $option_group ];
-		}
 		if ( is_callable( $this->option_function_name ) ) {
 			$options = apply_filters( $this->option_function_name, call_user_func( $this->option_function_name ) );
 		}
