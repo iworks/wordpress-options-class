@@ -1646,7 +1646,7 @@ class iworks_options {
 			'show_option_none' => esc_attr( $show_option_none ),
 			'post_type'        => esc_attr( $post_type ),
 		);
-		return wp_dropdown_pages( $args );
+		return wp_dropdown_pages( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
