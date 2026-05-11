@@ -2385,7 +2385,7 @@ class iworks_options {
 				'deps'               => array( 'jquery', 'switch_button', 'jquery-ui-tabs' ),
 				'wp_localize_script' => array(
 					'buttons' => array(
-						'select_media' => __( 'Select Image', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
+						'select_media' => esc_html__( 'Select Image', 'IWORKS_OPTIONS_TEXTDOMAIN' ),
 					),
 				),
 			),
