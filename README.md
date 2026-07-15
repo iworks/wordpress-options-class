@@ -6,6 +6,9 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 3.1.1 (2026-07-15)
+* Fixed an issue where HTML tags in textarea fields were not rendering properly in the admin panel by wrapping the values in esc_html().
+
 ##### 3.1.0 (2026-04-17)
 * Added `get_mode()` method.
 * Added `get_option_function_name()` method.

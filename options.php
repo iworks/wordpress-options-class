@@ -7,7 +7,7 @@
  * and managing plugin/theme configuration options.
  *
  * @package Iworks\Options
- * @version 3.1.0
+ * @version 3.1.1
  * @author  Marcin Pietrzak <marcin@iworks.pl>
  * @link    https://github.com/iworks/wordpress-options-class
  * @license GPL-3.0-or-later
@@ -42,7 +42,7 @@ class iworks_options {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	private string $version = '3.1.0';
+	private string $version = '3.1.1';
 
 	/**
 	 * Core options array.
@@ -2151,7 +2151,7 @@ class iworks_options {
 			esc_attr( $name ),
 			$this->build_field_attributes( $args ),
 			$data_string,
-			$value
+			esc_html( $value )
 		);
 	}
 
