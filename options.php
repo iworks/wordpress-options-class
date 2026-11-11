@@ -7,7 +7,7 @@
  * and managing plugin/theme configuration options.
  *
  * @package Iworks\Options
- * @version 3.1.1
+ * @version 3.1.2
  * @author  Marcin Pietrzak <marcin@iworks.pl>
  * @link    https://github.com/iworks/wordpress-options-class
  * @license GPL-3.0-or-later
@@ -42,7 +42,7 @@ class iworks_options {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	private string $version = '3.1.1';
+	private string $version = '3.1.2';
 
 	/**
 	 * Core options array.
@@ -2410,12 +2410,12 @@ class iworks_options {
 			array(
 				'handle'  => 'select2',
 				'file'    => 'select2.min.css',
-				'version' => '4.0.13',
+				'version' => '4.1.0',
 			),
 			array(
 				'handle'  => 'select2',
 				'file'    => 'select2.min.js',
-				'version' => '4.0.13',
+				'version' => '4.1.0',
 				'deps'    => array( 'jquery' ),
 			),
 			/**
@@ -2508,7 +2508,7 @@ class iworks_options {
 		$nonce_names = array( $this->get_nonce_name(), '_wpnonce' );
 		foreach ( $nonce_names as $nonce_name ) {
 			if ( isset( $_REQUEST[ $nonce_name ] ) ) {
-				return sanitize_text_field( wp_unslash( $_REQUEST[ $nonce_value ] ) );
+				return sanitize_text_field( wp_unslash( $_REQUEST[ $nonce_name ] ) );
 			}
 		}
 		return new WP_Error( 'security', esc_html__( 'Failed Security Check', 'IWORKS_OPTIONS_TEXTDOMAIN' ) );

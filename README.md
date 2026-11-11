@@ -6,6 +6,11 @@ Options Class for WordPress plugins &amp; themes
 Changelog
 ---------
 
+##### 3.1.2
+* Fixed undefined variable in `get_nonce_value()` — nonce was never read from the request, which blocked saving taxonomy options (nonce check always failed closed).
+* Updated bundled jQuery UI CSS from 1.12.1 to 1.14.2 (WordPress 7.1 compatibility; 1.12.1 is end-of-life).
+* Updated [Select2](https://github.com/select2/select2) from 4.0.13 to 4.1.0, including i18n files (adds jQuery 4 support and accessibility improvements).
+
 ##### 3.1.1 (2026-07-15)
 * Fixed an issue where HTML tags in textarea fields were not rendering properly in the admin panel by wrapping the values in esc_html().
 
